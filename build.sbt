@@ -2,7 +2,7 @@ import org.jetbrains.sbtidea.Keys._
 
 ThisBuild / scalaVersion := "2.13.14"
 ThisBuild / intellijPluginName := "intellij-hocon"
-ThisBuild / intellijBuild := "242.18071.24"
+ThisBuild / intellijBuild := "242.20224.300"
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
 val junitInterfaceVersion = "0.11"
