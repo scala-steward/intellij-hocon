@@ -1,8 +1,8 @@
 package org.jetbrains.plugins.hocon
 
 import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.testFramework.LightPlatformCodeInsightTestCase
 import com.intellij.testFramework.PsiTestUtil.removeContentEntry
+import com.intellij.testFramework.{IndexingTestUtil, LightPlatformCodeInsightTestCase}
 
 abstract class HoconSingleModuleTest extends LightPlatformCodeInsightTestCase with HoconTestUtils {
   final def project = getProject
@@ -18,6 +18,8 @@ abstract class HoconSingleModuleTest extends LightPlatformCodeInsightTestCase wi
     inWriteAction {
       rootModel.commit()
     }
+
+    IndexingTestUtil.waitUntilIndexesAreReady(project)
   }
 
   override def tearDown(): Unit = {

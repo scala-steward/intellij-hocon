@@ -1,5 +1,6 @@
 package org.jetbrains.plugins.hocon
 
+import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem._
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.{FileEditorManager, OpenFileDescriptor}
@@ -29,7 +30,7 @@ abstract class HoconActionTest protected(protected val actionId: String, subPath
     editor.getCaretModel.moveToOffset(offset)
 
     try {
-      executeAction(new MockDataContext(psiFile, editor), editor)
+      executeAction(mockDataContext(psiFile, editor), editor)
       extractResult(psiFile, editor)
     } finally {
       editorManager.closeFile(psiFile.getVirtualFile)
@@ -53,12 +54,13 @@ abstract class HoconActionTest protected(protected val actionId: String, subPath
 
 object HoconActionTest {
 
-  private class MockDataContext(file: PsiFile, editor: Editor) extends DataContext with DataProvider {
-    def getData(dataId: String): AnyRef = {
+  private def mockDataContext(file: PsiFile, editor: Editor) = {
+    val parentContext = DataManager.getInstance().getDataContext(editor.getComponent)
+    CustomizedDataContext.withProvider(parentContext, (dataId: String) => {
       if (CommonDataKeys.PROJECT is dataId) file.getProject
       else if (CommonDataKeys.EDITOR is dataId) editor
       else null
-    }
+    })
   }
 
 }
