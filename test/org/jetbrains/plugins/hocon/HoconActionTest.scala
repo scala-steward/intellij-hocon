@@ -41,7 +41,6 @@ abstract class HoconActionTest protected(protected val actionId: String, subPath
     val action = ActionManager.getInstance.getAction(actionId)
     val actionEvent = TestActionEvent.createTestEvent(action, dataContext)
 
-    action.beforeActionPerformedUpdate(actionEvent)
     actionEvent.getPresentation match {
       case presentation if presentation.isEnabled && presentation.isVisible =>
         action.actionPerformed(actionEvent)
