@@ -10,7 +10,7 @@ val commonsTextVersion = "1.12.0"
 val opentest4jVersion = "1.3.0"
 
 lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
-  version := "2024.1.99-SNAPSHOT",
+  version := "2024.2.99-SNAPSHOT",
   Compile / scalaSource := baseDirectory.value / "src",
   Test / scalaSource := baseDirectory.value / "test",
   Compile / resourceDirectory := baseDirectory.value / "resources",
