@@ -7,6 +7,7 @@ ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
 val junitInterfaceVersion = "0.11"
 val commonsTextVersion = "1.12.0"
+val opentest4jVersion = "1.3.0"
 
 lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
   version := "2024.1.99-SNAPSHOT",
@@ -25,6 +26,7 @@ lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
   libraryDependencies ++= Seq(
     "org.apache.commons" % "commons-text" % commonsTextVersion,
     "com.novocode" % "junit-interface" % junitInterfaceVersion % Test,
+    "org.opentest4j" % "opentest4j" % opentest4jVersion % Test,
   ),
   packageLibraryMappings := Seq.empty, // allow scala-library
   patchPluginXml := pluginXmlOptions { xml =>
