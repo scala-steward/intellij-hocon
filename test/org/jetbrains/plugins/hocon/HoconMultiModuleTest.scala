@@ -1,15 +1,15 @@
 package org.jetbrains.plugins.hocon
 
-import java.io.File
-
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.roots._
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder
 import com.intellij.testFramework.fixtures._
 import com.intellij.testFramework.fixtures.impl.{JavaModuleFixtureBuilderImpl, ModuleFixtureImpl}
+import com.intellij.testFramework.{IndexingTestUtil, UsefulTestCase}
 import org.jetbrains.jps.model.java.JavaSourceRootType
+
+import java.io.File
 
 abstract class HoconMultiModuleTest extends UsefulTestCase with HoconTestUtils {
 
@@ -71,6 +71,8 @@ abstract class HoconMultiModuleTest extends UsefulTestCase with HoconTestUtils {
 
       models.values.foreach(_.commit())
     }
+
+    IndexingTestUtil.waitUntilIndexesAreReady(_fixture.getProject)
   }
 
   override def tearDown(): Unit = {
