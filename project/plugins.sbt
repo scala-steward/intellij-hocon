@@ -1,3 +1,3 @@
-addSbtPlugin("org.jetbrains" % "sbt-idea-plugin" % "3.26.2")
-addSbtPlugin("org.jetbrains.scala" % "sbt-ide-settings" % "1.1.1")
+addSbtPlugin("org.jetbrains" % "sbt-idea-plugin" % "4.0.3")
+addSbtPlugin("org.jetbrains.scala" % "sbt-ide-settings" % "1.1.2")
 addSbtPlugin("com.github.sbt" % "sbt-github-actions" % "0.24.0")

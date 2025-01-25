@@ -1,16 +1,17 @@
 import org.jetbrains.sbtidea.Keys._
 
-ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / intellijPluginName := "intellij-hocon"
-ThisBuild / intellijBuild := "242.20224.300"
+ThisBuild / intellijBuild := "251.17181.31"
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
 val junitInterfaceVersion = "0.11"
-val commonsTextVersion = "1.12.0"
+val junitVersion = "4.13.2"
+val commonsTextVersion = "1.13.0"
 val opentest4jVersion = "1.3.0"
 
 lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
-  version := "2024.2.99-SNAPSHOT",
+  version := "2025.1.99-SNAPSHOT",
   Compile / scalaSource := baseDirectory.value / "src",
   Test / scalaSource := baseDirectory.value / "test",
   Compile / resourceDirectory := baseDirectory.value / "resources",
@@ -22,10 +23,11 @@ lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
     "-Xfatal-warnings",
   ),
   ideBasePackages := Seq("org.jetbrains.plugins.hocon"),
-  intellijPlugins := Seq("com.intellij.properties", "com.intellij.java", "com.intellij.java-i18n").map(_.toPlugin),
+  intellijPlugins := Seq("com.intellij.java", "com.intellij.java-i18n", "com.intellij.modules.json").map(_.toPlugin),
   libraryDependencies ++= Seq(
     "org.apache.commons" % "commons-text" % commonsTextVersion,
     "com.novocode" % "junit-interface" % junitInterfaceVersion % Test,
+    "junit" % "junit" % junitVersion % Test,
     "org.opentest4j" % "opentest4j" % opentest4jVersion % Test,
   ),
   packageLibraryMappings := Seq.empty, // allow scala-library

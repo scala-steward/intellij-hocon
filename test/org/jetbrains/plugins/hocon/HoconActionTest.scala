@@ -55,10 +55,10 @@ object HoconActionTest {
 
   private def mockDataContext(file: PsiFile, editor: Editor) = {
     val parentContext = DataManager.getInstance().getDataContext(editor.getComponent)
-    CustomizedDataContext.withProvider(parentContext, (dataId: String) => {
-      if (CommonDataKeys.PROJECT is dataId) file.getProject
-      else if (CommonDataKeys.EDITOR is dataId) editor
-      else null
+    CustomizedDataContext.withSnapshot(parentContext, (sink: DataSink) => {
+      sink.set(CommonDataKeys.PROJECT, file.getProject)
+      sink.set(CommonDataKeys.EDITOR, editor)
+      sink.set(CommonDataKeys.PSI_FILE, file)
     })
   }
 
