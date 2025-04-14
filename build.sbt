@@ -7,7 +7,7 @@ ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
 val junitInterfaceVersion = "0.13.3"
 val junitVersion = "4.13.2"
-val commonsTextVersion = "1.13.0"
+val commonsTextVersion = "1.13.1"
 val opentest4jVersion = "1.3.0"
 
 lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
