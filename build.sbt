@@ -4,6 +4,7 @@ ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / intellijPluginName := "intellij-hocon"
 ThisBuild / intellijBuild := "251.17181.31"
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
+ThisBuild / autoRemoveOldCachedIntelliJSDK := true
 
 val junitInterfaceVersion = "0.13.3"
 val junitVersion = "4.13.2"
