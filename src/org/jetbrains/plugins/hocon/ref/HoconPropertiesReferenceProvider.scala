@@ -19,9 +19,19 @@ class HoconPropertiesReferenceProvider extends PsiReferenceProvider {
   def getReferencesByElement(element: PsiElement, context: ProcessingContext): Array[PsiReference] =
     if (!isEnabled(element.getProject)) PsiReference.EMPTY_ARRAY
     else {
+
+      def stripSurroundingQuote(s: String): Option[String] =
+        s.opt.flatMap { t =>
+          val inner = if (t.length >= 2 && t.head == '"' && t.last == '"') t.substring(1, t.length - 1) else t
+          inner.opt.filter(_.nonEmpty)
+        }
+
+      val valueOrText: Option[String] = element match {
+        case lit: PsiLiteralValue => Option(lit.getValue).collect { case s: String => s }
+        case _ => stripSurroundingQuote(element.getText)
+      }
       val res = for {
-        lit <- element.opt.collectOnly[PsiLiteralValue]
-        strValue <- lit.getValue.opt.collectOnly[String]
+        strValue <- valueOrText
         hpath <- HoconPsiElementFactory.createPath(strValue, PsiManager.getInstance(element.getProject)).opt
         strPath <- hpath.fullStringPath
       } yield {
@@ -47,7 +57,7 @@ class HoconPropertiesReferenceProvider extends PsiReferenceProvider {
             val nextRef = subRefs.headOption
             val revIndex = nextRef.fold(0)(_.reverseIndex + 1)
             val keyRange = new TextRange(off, endOffset)
-            val ref = new HoconPropertyReference(strPath, revIndex, key, element, lit, keyRange)
+            val ref = new HoconPropertyReference(strPath, revIndex, key, element, keyRange)
             ref :: subRefs
         }
 
@@ -62,7 +72,6 @@ class HoconPropertyReference(
   val reverseIndex: Int,
   key: String,
   element: PsiElement,
-  lit: PsiLiteralValue,
   range: TextRange
 ) extends PsiReference {
   def getCanonicalText: String = key

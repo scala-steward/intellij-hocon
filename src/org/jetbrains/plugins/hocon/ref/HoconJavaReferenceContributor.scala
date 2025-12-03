@@ -13,6 +13,6 @@ class HoconJavaReferenceContributor extends PsiReferenceContributor {
 
   override def registerReferenceProviders(registrar: PsiReferenceRegistrar): Unit = {
     registrar.registerReferenceProvider(pattern[HString], new HStringJavaClassReferenceProvider)
-    registrar.registerReferenceProvider(pattern[PsiLiteral], new HoconPropertiesReferenceProvider)
+    registrar.registerReferenceProvider(pattern[PsiElement], new HoconPropertiesReferenceProvider)
   }
 }
