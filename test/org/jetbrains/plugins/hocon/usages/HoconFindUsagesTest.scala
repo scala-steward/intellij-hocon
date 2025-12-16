@@ -84,7 +84,6 @@ class HoconFindUsagesTest extends HoconMultiModuleTest {
 
     val element = file.findElementAt(offset)
     val maybeE = element.parentOfType[E]
-    println(s"element: $element = ${element.getText} and maybeE: $maybeE and parent: ${element.getParent} and parentClass ${element.getParent.getClass} and parentText ${element.getParent.getText}")
     val hkey = maybeE.orNull
     val fixtureImpl = fixture.asInstanceOf[CodeInsightTestFixtureImpl] // findUsages with scope is not exposed...
     val usages = fixtureImpl.findUsages(hkey, ProjectScope.getAllScope(fixture.getProject))
