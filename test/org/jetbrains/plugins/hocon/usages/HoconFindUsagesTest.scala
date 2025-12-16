@@ -81,10 +81,7 @@ class HoconFindUsagesTest extends HoconMultiModuleTest {
     val file = findFile(filename, fixture.getProject)
     fixture.openFileInEditor(file.getVirtualFile)
     val offset = fixture.getEditor.logicalPositionToOffset(new LogicalPosition(line - 1, column - 1))
-
-    val element = file.findElementAt(offset)
-    val maybeE = element.parentOfType[E]
-    val hkey = maybeE.orNull
+    val hkey = file.findElementAt(offset).parentOfType[E].orNull
     val fixtureImpl = fixture.asInstanceOf[CodeInsightTestFixtureImpl] // findUsages with scope is not exposed...
     val usages = fixtureImpl.findUsages(hkey, ProjectScope.getAllScope(fixture.getProject))
     val usagesRepr = usages.asScala.toVector.map { ui =>
