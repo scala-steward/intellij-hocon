@@ -20,16 +20,15 @@ class HoconPropertiesReferenceProvider extends PsiReferenceProvider {
     if (!isEnabled(element.getProject)) PsiReference.EMPTY_ARRAY
     else {
 
-      def stripSurroundingQuote(s: String): Option[String] =
-        s.opt.flatMap { t =>
-          val inner = if (t.length >= 2 && t.head == '"' && t.last == '"') t.substring(1, t.length - 1) else t
-          inner.opt.filter(_.nonEmpty)
-        }
+      def stripSurroundingQuote(elementText: String): Option[String] = for {
+        text <- elementText.opt
+        inner = if (text.length >= 2 && text.head == '"' && text.last == '"') text.substring(1, text.length - 1) else text
+        if inner.nonEmpty
+      } yield inner
 
-      val valueOrText: Option[String] = element match {
-        case lit: PsiLiteralValue => Option(lit.getValue).collect { case s: String => s }
-        case _ => stripSurroundingQuote(element.getText)
-      }
+      val valueOrText: Option[String] = element.opt.collectOnly[PsiLiteralValue]
+        .map(_.getValue).collectOnly[String]
+        .orElse(stripSurroundingQuote(element.getText))
       val res = for {
         strValue <- valueOrText
         hpath <- HoconPsiElementFactory.createPath(strValue, PsiManager.getInstance(element.getProject)).opt
