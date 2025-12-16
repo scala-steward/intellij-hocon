@@ -21,18 +21,22 @@ class HoconFindUsagesTest extends HoconMultiModuleTest {
       |modA/lib/reference.conf:6:21
       |modA/lib/reference.conf:7:17
       |modA/libsrc/libpkg/LibMain.java:4:44
+      |modA/libsrc/libpkg/LibMain.kt:4:35
       |modA/src/application.conf:1:11
       |modA/src/application.conf:2:20
       |modA/src/application.conf:3:17
       |modA/src/pkg/Main.java:4:44
+      |modA/src/pkg/Main.kt:4:35
       |modB/lib/reference.conf:3:5
       |modB/lib/reference.conf:6:21
       |modB/lib/reference.conf:7:17
       |modB/libsrc/blibpkg/LibMain.java:4:44
+      |modB/libsrc/blibpkg/LibMain.kt:4:35
       |modB/src/application.conf:1:11
       |modB/src/application.conf:2:20
       |modB/src/application.conf:3:17
       |modB/src/bpkg/Main.java:4:44
+      |modB/src/bpkg/Main.kt:4:35
       |""".stripMargin
 
   def testHoconUsagesFromSources(): Unit =
@@ -64,13 +68,24 @@ class HoconFindUsagesTest extends HoconMultiModuleTest {
         |modA/src/application.conf:4:13
         |""".stripMargin)
 
+  def testKotlinClassUsages(): Unit =
+    testFindUsages[PsiElement]("modA/src/pkg/Main.kt", 3, 8,
+      """modA/lib/reference.conf:8:13
+        |modA/libsrc/reference.conf:8:13
+        |modA/src/application.conf:4:13
+        |""".stripMargin)
+
   private def testFindUsages[E >: Null <: PsiElement : ClassTag](
     filename: String, line: Int, column: Int, expected: String
   ): Unit = {
     val file = findFile(filename, fixture.getProject)
     fixture.openFileInEditor(file.getVirtualFile)
     val offset = fixture.getEditor.logicalPositionToOffset(new LogicalPosition(line - 1, column - 1))
-    val hkey = file.findElementAt(offset).parentOfType[E].orNull
+
+    val element = file.findElementAt(offset)
+    val maybeE = element.parentOfType[E]
+    println(s"element: $element = ${element.getText} and maybeE: $maybeE and parent: ${element.getParent} and parentClass ${element.getParent.getClass} and parentText ${element.getParent.getText}")
+    val hkey = maybeE.orNull
     val fixtureImpl = fixture.asInstanceOf[CodeInsightTestFixtureImpl] // findUsages with scope is not exposed...
     val usages = fixtureImpl.findUsages(hkey, ProjectScope.getAllScope(fixture.getProject))
     val usagesRepr = usages.asScala.toVector.map { ui =>
