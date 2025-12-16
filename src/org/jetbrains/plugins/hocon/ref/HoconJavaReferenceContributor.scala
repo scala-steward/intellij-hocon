@@ -1,10 +1,9 @@
 package org.jetbrains.plugins.hocon
 package ref
 
-import psi.HString
-
 import com.intellij.patterns.{PlatformPatterns, PsiElementPattern}
 import com.intellij.psi.{PsiElement, PsiReferenceContributor, PsiReferenceRegistrar}
+import org.jetbrains.plugins.hocon.psi.HString
 
 import scala.reflect.{ClassTag, classTag}
 

@@ -9,6 +9,7 @@ import org.jetbrains.plugins.hocon.psi.{HFieldKey, HoconPsiElementFactory, Hocon
 import org.jetbrains.plugins.hocon.semantics.{ResOpts, ToplevelCtx}
 import org.jetbrains.plugins.hocon.settings.HoconProjectSettings
 
+import java.lang
 import scala.annotation.tailrec
 import scala.collection.mutable
 
@@ -19,16 +20,17 @@ class HoconPropertiesReferenceProvider extends PsiReferenceProvider {
   def getReferencesByElement(element: PsiElement, context: ProcessingContext): Array[PsiReference] =
     if (!isEnabled(element.getProject)) PsiReference.EMPTY_ARRAY
     else {
-
-      def stripSurroundingQuote(elementText: String): Option[String] = for {
-        text <- elementText.opt
-        inner = if (text.length >= 2 && text.head == '"' && text.last == '"') text.substring(1, text.length - 1) else text
-        if inner.nonEmpty
-      } yield inner
-
       val valueOrText: Option[String] = element.opt.collectOnly[PsiLiteralValue]
         .map(_.getValue).collectOnly[String]
-        .orElse(stripSurroundingQuote(element.getText))
+        .orElse {
+          element.opt.collectOnly[PsiLanguageInjectionHost]
+            .map(_.createLiteralTextEscaper())
+            .map { lit =>
+              val out = new lang.StringBuilder()
+              lit.decode(lit.getRelevantTextRange, out)
+              out.toString
+            }
+        }
       val res = for {
         strValue <- valueOrText
         hpath <- HoconPsiElementFactory.createPath(strValue, PsiManager.getInstance(element.getProject)).opt
