@@ -24,7 +24,8 @@ lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
     "-Xfatal-warnings",
   ),
   ideBasePackages := Seq("org.jetbrains.plugins.hocon"),
-  intellijPlugins := Seq("com.intellij.java", "com.intellij.java-i18n", "com.intellij.modules.json").map(_.toPlugin),
+  intellijPlugins := Seq("com.intellij.java-i18n", "com.intellij.modules.json").map(_.toPlugin),
+  intellijExtraRuntimePluginsInTests := Seq("org.jetbrains.kotlin").map(_.toPlugin),
   libraryDependencies ++= Seq(
     "org.apache.commons" % "commons-text" % commonsTextVersion,
     "com.github.sbt" % "junit-interface" % junitInterfaceVersion % Test,
