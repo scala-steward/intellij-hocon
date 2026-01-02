@@ -22,9 +22,13 @@ class HoconResolutionTest extends HoconSingleModuleTest {
       val actualResult = render(ctx.occurrences(path, opts))
       Assert.assertEquals(expected, actualResult)
 
-      val traversalResult = render(Iterator.iterate(ctx.occurrences(path, opts).nextOption().orNull) { rf =>
-        rf.nextOccurrence(opts).orNull
-      }.takeWhile(_ != null))
+      val traversalResult = render(
+        Iterator
+          .iterate(ctx.occurrences(path, opts).nextOption().orNull) { rf =>
+            rf.nextOccurrence(opts).orNull
+          }
+          .takeWhile(_ != null)
+      )
       Assert.assertEquals(expected, traversalResult)
     }
 
@@ -32,7 +36,9 @@ class HoconResolutionTest extends HoconSingleModuleTest {
     test(reverse = false)
   }
 
-  def testSingleKey(): Unit = testPath("application.conf", "a",
+  def testSingleKey(): Unit = testPath(
+    "application.conf",
+    "a",
     """reference.conf:1:0
       |application.conf:1:0
       |application.conf:2:0
@@ -46,10 +52,12 @@ class HoconResolutionTest extends HoconSingleModuleTest {
       |application.conf:25:0
       |application.conf:31:0
       |application.conf:33:0
-      |""".stripMargin
+      |""".stripMargin,
   )
 
-  def testMidPath(): Unit = testPath("application.conf", "a.b",
+  def testMidPath(): Unit = testPath(
+    "application.conf",
+    "a.b",
     """reference.conf:1:2
       |application.conf:1:2
       |application.conf:2:2
@@ -66,10 +74,12 @@ class HoconResolutionTest extends HoconSingleModuleTest {
       |application.conf:28:2
       |application.conf:31:2
       |application.conf:33:2
-      |""".stripMargin
+      |""".stripMargin,
   )
 
-  def testFullPath(): Unit = testPath("application.conf", "a.b.c",
+  def testFullPath(): Unit = testPath(
+    "application.conf",
+    "a.b.c",
     // some entries duplicated due to self-referential substitutions
     """reference.conf:1:4
       |application.conf:1:4
@@ -90,6 +100,6 @@ class HoconResolutionTest extends HoconSingleModuleTest {
       |application.conf:23:16
       |application.conf:28:4
       |application.conf:31:4
-      |""".stripMargin
+      |""".stripMargin,
   )
 }

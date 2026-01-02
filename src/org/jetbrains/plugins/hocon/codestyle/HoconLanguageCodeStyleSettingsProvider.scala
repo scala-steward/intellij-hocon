@@ -30,16 +30,19 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
 
     settingsType match {
       case SPACING_SETTINGS =>
-        consumer.showStandardOptions(List(
-          SpacingOption.SPACE_WITHIN_BRACES,
-          SpacingOption.SPACE_WITHIN_BRACKETS,
-          SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES,
-          SpacingOption.SPACE_BEFORE_COMMA,
-          SpacingOption.SPACE_AFTER_COMMA
-        ).map(_.name): _*)
+        consumer.showStandardOptions(
+          List(
+            SpacingOption.SPACE_WITHIN_BRACES,
+            SpacingOption.SPACE_WITHIN_BRACKETS,
+            SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES,
+            SpacingOption.SPACE_BEFORE_COMMA,
+            SpacingOption.SPACE_AFTER_COMMA,
+          ).map(_.name): _*
+        )
 
         consumer.renameStandardOption(SpacingOption.SPACE_WITHIN_BRACES.name, "Object braces")
-        consumer.renameStandardOption(SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES.name, "Include qualifier parentheses")
+        consumer
+          .renameStandardOption(SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES.name, "Include qualifier parentheses")
 
         showCustomOption("SPACE_BEFORE_COLON", "Before colon", SPACES_AROUND_OPERATORS)
         showCustomOption("SPACE_AFTER_COLON", "After colon", SPACES_AROUND_OPERATORS)
@@ -67,16 +70,35 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
         showCustomOption("LISTS_NEW_LINE_AFTER_LBRACKET", "New line after '['", ListsWrap)
         showCustomOption("LISTS_RBRACKET_ON_NEXT_LINE", "Place ']' on new line", ListsWrap)
 
-        showCustomOption("OBJECT_FIELDS_WITH_COLON_WRAP", ObjectFieldsWithColonWrap, null,
-          WRAP_OPTIONS_FOR_SINGLETON, WRAP_VALUES_FOR_SINGLETON)
+        showCustomOption(
+          "OBJECT_FIELDS_WITH_COLON_WRAP",
+          ObjectFieldsWithColonWrap,
+          null,
+          WRAP_OPTIONS_FOR_SINGLETON,
+          WRAP_VALUES_FOR_SINGLETON,
+        )
         showCustomOption("OBJECT_FIELDS_COLON_ON_NEXT_LINE", "Colon on next line", ObjectFieldsWithColonWrap)
 
-        showCustomOption("OBJECT_FIELDS_WITH_ASSIGNMENT_WRAP", ObjectFieldsWithAssignmentWrap, null,
-          WRAP_OPTIONS_FOR_SINGLETON, WRAP_VALUES_FOR_SINGLETON)
-        showCustomOption("OBJECT_FIELDS_ASSIGNMENT_ON_NEXT_LINE", "Assignment operator on next line", ObjectFieldsWithAssignmentWrap)
+        showCustomOption(
+          "OBJECT_FIELDS_WITH_ASSIGNMENT_WRAP",
+          ObjectFieldsWithAssignmentWrap,
+          null,
+          WRAP_OPTIONS_FOR_SINGLETON,
+          WRAP_VALUES_FOR_SINGLETON,
+        )
+        showCustomOption(
+          "OBJECT_FIELDS_ASSIGNMENT_ON_NEXT_LINE",
+          "Assignment operator on next line",
+          ObjectFieldsWithAssignmentWrap,
+        )
 
-        showCustomOption("INCLUDED_RESOURCE_WRAP", "Included resource", null,
-          WRAP_OPTIONS_FOR_SINGLETON, WRAP_VALUES_FOR_SINGLETON)
+        showCustomOption(
+          "INCLUDED_RESOURCE_WRAP",
+          "Included resource",
+          null,
+          WRAP_OPTIONS_FOR_SINGLETON,
+          WRAP_VALUES_FOR_SINGLETON,
+        )
 
       case BLANK_LINES_SETTINGS =>
 

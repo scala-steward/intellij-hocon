@@ -22,10 +22,11 @@ class HStringJavaClassReferenceProvider extends JavaClassReferenceProvider {
     }
   }
 
-  override def getReferencesByString(str: String, position: PsiElement, offsetInPosition: Int): Array[PsiReference] = position match {
-    case hstr: HString if isEligible(hstr) =>
-      super.getReferencesByString(str, position, offsetInPosition)
-    case _ =>
-      PsiReference.EMPTY_ARRAY
-  }
+  override def getReferencesByString(str: String, position: PsiElement, offsetInPosition: Int): Array[PsiReference] =
+    position match {
+      case hstr: HString if isEligible(hstr) =>
+        super.getReferencesByString(str, position, offsetInPosition)
+      case _ =>
+        PsiReference.EMPTY_ARRAY
+    }
 }

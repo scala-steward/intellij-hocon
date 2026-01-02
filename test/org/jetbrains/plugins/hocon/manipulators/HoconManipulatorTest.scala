@@ -6,11 +6,10 @@ import org.jetbrains.plugins.hocon.psi.{HKey, HString, HoconPsiElement}
 import org.junit.runner.RunWith
 import org.junit.runners.AllTests
 
-/**
-  * @author ghik
+/** @author
+  *   ghik
   */
-abstract class HoconManipulatorTest(clazz: Class[_ <: HoconPsiElement],
-                                    name: String)
+abstract class HoconManipulatorTest(clazz: Class[_ <: HoconPsiElement], name: String)
   extends HoconFileSetTestCase("manipulators/" + name) {
 
   import HoconFileSetTestCase._
@@ -23,8 +22,7 @@ abstract class HoconManipulatorTest(clazz: Class[_ <: HoconPsiElement],
     val psiFile = createPseudoPhysicalHoconFile(input)
 
     inWriteCommandAction {
-      val element = Iterator.iterate(psiFile.findElementAt(offset))(_.getParent)
-        .find(clazz.isInstance).get
+      val element = Iterator.iterate(psiFile.findElementAt(offset))(_.getParent).find(clazz.isInstance).get
 
       val manipulator = ElementManipulators.getManipulator(element)
       val range = manipulator.getRangeInElement(element)

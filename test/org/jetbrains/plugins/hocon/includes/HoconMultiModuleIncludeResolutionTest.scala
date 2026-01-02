@@ -1,9 +1,9 @@
 package org.jetbrains.plugins.hocon
 package includes
 
-/**
- * @author ghik
- */
+/** @author
+  *   ghik
+  */
 class HoconMultiModuleIncludeResolutionTest extends HoconMultiModuleTest with HoconIncludeResolutionTest {
 
   def rootPath = "testdata/includes/multimodule"

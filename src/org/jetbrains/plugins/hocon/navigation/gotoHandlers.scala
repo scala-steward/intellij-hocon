@@ -33,8 +33,7 @@ abstract class HoconGotoPrevNextAction(reverse: Boolean) extends BaseCodeInsight
     nextOccurrence <- resField.nextOccurrence(ResOpts(reverse)).map(_.field)
     containingFile <- nextOccurrence.getContainingFile.opt.flatMap(_.getVirtualFile.opt)
   } {
-    val desc = PsiNavigationSupport.getInstance.createNavigatable(
-      project, containingFile, nextOccurrence.getTextOffset)
+    val desc = PsiNavigationSupport.getInstance.createNavigatable(project, containingFile, nextOccurrence.getTextOffset)
     desc.navigate(true)
   }
 }

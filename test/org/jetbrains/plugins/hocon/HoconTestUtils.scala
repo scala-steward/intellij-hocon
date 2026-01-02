@@ -21,13 +21,11 @@ trait HoconTestUtils {
   lazy val contentRoot: VirtualFile = {
     val lfs = LocalFileSystem.getInstance()
     lfs.refresh(false)
-    lfs.findFileByPath(rootPath).opt
-      .getOrElse(throw new IllegalArgumentException(s"root path not found: $rootPath"))
+    lfs.findFileByPath(rootPath).opt.getOrElse(throw new IllegalArgumentException(s"root path not found: $rootPath"))
   }
 
   def findVirtualFile(path: String): VirtualFile =
-    contentRoot.findFileByRelativePath(path).opt
-      .getOrElse(throw new IllegalArgumentException(s"file not found: $path"))
+    contentRoot.findFileByRelativePath(path).opt.getOrElse(throw new IllegalArgumentException(s"file not found: $path"))
 
   def findFile(path: String, project: Project): PsiFile =
     PsiManager.getInstance(project).findFile(findVirtualFile(path))

@@ -11,7 +11,8 @@ class HoconCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 
   override def getPriority = DisplayPriority.COMMON_SETTINGS
 
-  override def createConfigurable(settings: CodeStyleSettings, modelSettings: CodeStyleSettings): CodeStyleConfigurable =
+  override def createConfigurable(settings: CodeStyleSettings, modelSettings: CodeStyleSettings)
+    : CodeStyleConfigurable =
     new CodeStyleAbstractConfigurable(settings, modelSettings, "HOCON") {
       override protected def createPanel(settings: CodeStyleSettings): TabbedLanguageCodeStylePanel =
         new TabbedLanguageCodeStylePanel(HoconLanguage, getCurrentSettings, settings) {}

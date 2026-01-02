@@ -10,9 +10,9 @@ import com.intellij.util.LocalTimeCounter
 import org.jetbrains.plugins.hocon.lang.HoconLanguage
 import org.jetbrains.plugins.hocon.psi.HoconPsiFile
 
-/**
- * @author ghik
- */
+/** @author
+  *   ghik
+  */
 abstract class HoconFileSetTestCase(subpath: String)
   extends FileSetTestCase(s"${HoconTestUtils.TestdataPath}/$subpath") with HoconTestUtils {
 
@@ -33,7 +33,8 @@ abstract class HoconFileSetTestCase(subpath: String)
     val project = myProject
     val tempFile = project.getBasePath + "/temp." + extension
     val fileType = FileTypeManager.getInstance.getFileTypeByFileName(tempFile)
-    PsiFileFactory.getInstance(project)
+    PsiFileFactory
+      .getInstance(project)
       .createFileFromText(tempFile, fileType, text, LocalTimeCounter.currentTime(), true)
   }
 

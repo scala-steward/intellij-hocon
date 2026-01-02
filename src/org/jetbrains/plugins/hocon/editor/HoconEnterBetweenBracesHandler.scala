@@ -12,19 +12,22 @@ import org.jetbrains.plugins.hocon.lang.HoconLanguage
 
 import scala.annotation.nowarn
 
-/**
- * Like [[com.intellij.json.formatter.JsonEnterBetweenBracesHandler]]
- *
- * @author ghik
- */
+/** Like [[com.intellij.json.formatter.JsonEnterBetweenBracesHandler]]
+  *
+  * @author
+  *   ghik
+  */
 @nowarn("msg=deprecated")
 class HoconEnterBetweenBracesHandler extends EnterBetweenBracesHandler {
   override def preprocessEnter(
-    file: PsiFile, editor: Editor, caretOffsetRef: Ref[Integer],
-    caretAdvance: Ref[Integer], dataContext: DataContext,
-    originalHandler: EditorActionHandler
+    file: PsiFile,
+    editor: Editor,
+    caretOffsetRef: Ref[Integer],
+    caretAdvance: Ref[Integer],
+    dataContext: DataContext,
+    originalHandler: EditorActionHandler,
   ): Result =
-    if (file.getLanguage is HoconLanguage)
+    if (file.getLanguage.is(HoconLanguage))
       super.preprocessEnter(file, editor, caretOffsetRef, caretAdvance, dataContext, originalHandler)
     else
       EnterHandlerDelegate.Result.Continue

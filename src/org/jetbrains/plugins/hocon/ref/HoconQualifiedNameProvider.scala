@@ -6,9 +6,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import org.jetbrains.plugins.hocon.psi.HKey
 
-/**
- * @author ghik
- */
+/** @author
+  *   ghik
+  */
 class HoconQualifiedNameProvider extends QualifiedNameProvider {
   def adjustElementToCopy(element: PsiElement): PsiElement = element
 

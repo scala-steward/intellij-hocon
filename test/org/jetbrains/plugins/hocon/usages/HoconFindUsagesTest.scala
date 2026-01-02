@@ -58,14 +58,21 @@ class HoconFindUsagesTest extends HoconMultiModuleTest {
   // This doesn't seem to happen in non-test code.
   @Ignore
   def testJavaClassUsages(): Unit =
-    testFindUsages[PsiClass]("modA/src/pkg/Main.java", 3, 14,
+    testFindUsages[PsiClass](
+      "modA/src/pkg/Main.java",
+      3,
+      14,
       """modA/lib/reference.conf:8:13
         |modA/libsrc/reference.conf:8:13
         |modA/src/application.conf:4:13
-        |""".stripMargin)
+        |""".stripMargin,
+    )
 
-  private def testFindUsages[E >: Null <: PsiElement : ClassTag](
-    filename: String, line: Int, column: Int, expected: String
+  private def testFindUsages[E >: Null <: PsiElement: ClassTag](
+    filename: String,
+    line: Int,
+    column: Int,
+    expected: String,
   ): Unit = {
     val file = findFile(filename, fixture.getProject)
     fixture.openFileInEditor(file.getVirtualFile)
@@ -73,13 +80,17 @@ class HoconFindUsagesTest extends HoconMultiModuleTest {
     val hkey = file.findElementAt(offset).parentOfType[E].orNull
     val fixtureImpl = fixture.asInstanceOf[CodeInsightTestFixtureImpl] // findUsages with scope is not exposed...
     val usages = fixtureImpl.findUsages(hkey, ProjectScope.getAllScope(fixture.getProject))
-    val usagesRepr = usages.asScala.toVector.map { ui =>
-      val vfile = ui.getVirtualFile
-      fixture.openFileInEditor(vfile)
-      val logicalPosition = fixture.getEditor.offsetToLogicalPosition(ui.getNavigationOffset)
-      val usageFilename = vfile.getCanonicalPath.stripPrefix(contentRoot.getCanonicalPath + "/")
-      s"$usageFilename:${logicalPosition.line + 1}:${logicalPosition.column + 1}"
-    }.sorted.distinct.mkString("", "\n", "\n")
+    val usagesRepr = usages.asScala.toVector
+      .map { ui =>
+        val vfile = ui.getVirtualFile
+        fixture.openFileInEditor(vfile)
+        val logicalPosition = fixture.getEditor.offsetToLogicalPosition(ui.getNavigationOffset)
+        val usageFilename = vfile.getCanonicalPath.stripPrefix(contentRoot.getCanonicalPath + "/")
+        s"$usageFilename:${logicalPosition.line + 1}:${logicalPosition.column + 1}"
+      }
+      .sorted
+      .distinct
+      .mkString("", "\n", "\n")
     assertEquals(expected, usagesRepr)
   }
 }

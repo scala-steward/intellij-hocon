@@ -15,7 +15,7 @@ class JavaLiteralHoconReferenceTest extends HoconSingleModuleTest {
     val expectedKeys = offsets.map(off => hoconFile.findElementAt(off).parentOfType[HKey].get)
 
     val javaFile = psiManager.findFile(findVirtualFile("pkg/Main.java"))
-    val litOffset = javaFile.depthFirst.collectFirst({ case lit: PsiLiteralExpression => lit }).get.getTextOffset + 1
+    val litOffset = javaFile.depthFirst.collectFirst { case lit: PsiLiteralExpression => lit }.get.getTextOffset + 1
     val resolved = offsets.map(off => javaFile.findReferenceAt(litOffset + off).resolve())
 
     assertEquals(expectedKeys, resolved)

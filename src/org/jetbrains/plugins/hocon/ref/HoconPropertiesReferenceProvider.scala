@@ -63,7 +63,7 @@ class HoconPropertyReference(
   key: String,
   element: PsiElement,
   lit: PsiLiteralValue,
-  range: TextRange
+  range: TextRange,
 ) extends PsiReference {
   def getCanonicalText: String = key
   def getElement: PsiElement = element
@@ -76,8 +76,10 @@ class HoconPropertyReference(
 
   def resolve(): PsiElement = createContext
     .occurrences(fullPath, ResOpts(reverse = true))
-    .nextOption().flatMap(_.ancestorField(reverseIndex))
-    .map(_.hkey).orNull
+    .nextOption()
+    .flatMap(_.ancestorField(reverseIndex))
+    .map(_.hkey)
+    .orNull
 
   override def getVariants: Array[AnyRef] = {
     val toplevelCtx = ToplevelCtx(element, ToplevelCtx.ApplicationResource)
@@ -88,7 +90,8 @@ class HoconPropertyReference(
       case prefixPath => toplevelCtx.occurrences(prefixPath, opts).flatMap(_.occurrences(None, opts))
     }
     val seenKeys = new mutable.HashSet[String]
-    variantFields.filter(sf => seenKeys.add(sf.key)) // dirty, stateful filter
+    variantFields
+      .filter(sf => seenKeys.add(sf.key)) // dirty, stateful filter
       .map(sf => new HoconPropertyLookupElement(sf))
       .toArray[AnyRef]
   }

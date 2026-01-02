@@ -6,8 +6,7 @@ import com.intellij.psi.PsiFile
 import org.junit.runner.RunWith
 import org.junit.runners.AllTests
 
-abstract class HoconNavigationTest(actionId: String, subPath: String)
-  extends HoconActionTest(actionId, subPath) {
+abstract class HoconNavigationTest(actionId: String, subPath: String) extends HoconActionTest(actionId, subPath) {
   protected def extractResult(file: PsiFile, editor: Editor): String = {
     val lp = editor.getCaretModel.getLogicalPosition
     s"${lp.line + 1}:${lp.column + 1}"

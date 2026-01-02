@@ -6,9 +6,9 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.plugins.hocon.lang.HoconFileType.DefaultExtension
 import org.junit.Assert.assertEquals
 
-/**
- * @author ghik
- */
+/** @author
+  *   ghik
+  */
 class HoconHighlightUsagesTest extends BasePlatformTestCase {
 
   override def getTestDataPath: String = "testdata/highlightUsages"
@@ -20,7 +20,7 @@ class HoconHighlightUsagesTest extends BasePlatformTestCase {
     (3, 0, 3),
     (6, 0, 3),
     (7, 0, 3),
-    (9, 12, 3)
+    (9, 12, 3),
   )
 
   def testNested(): Unit = testUsages(
@@ -32,7 +32,7 @@ class HoconHighlightUsagesTest extends BasePlatformTestCase {
 
   def testInArrayElement(): Unit = testUsages(
     (6, 3, 3),
-    (6, 13, 3)
+    (6, 13, 3),
   )
 
   def testDifferentTexts(): Unit = testUsages(
@@ -40,7 +40,7 @@ class HoconHighlightUsagesTest extends BasePlatformTestCase {
     (1, 0, 5),
     (2, 0, 5),
     (3, 0, 9),
-    (4, 10, 7)
+    (4, 10, 7),
   )
 
   def testSingle(): Unit = testUsages(
@@ -48,11 +48,13 @@ class HoconHighlightUsagesTest extends BasePlatformTestCase {
   )
 
   private def testUsages(expectedHighlights: (Int, Int, Int)*): Unit = {
-    val actualHighlights = highlights.map {
-      case (startOffset, endOffset) => (logicalPositionAt(startOffset), endOffset - startOffset)
-    }.map {
-      case (position, length) => (position.line, position.column, length)
-    }
+    val actualHighlights = highlights
+      .map { case (startOffset, endOffset) =>
+        (logicalPositionAt(startOffset), endOffset - startOffset)
+      }
+      .map { case (position, length) =>
+        (position.line, position.column, length)
+      }
 
     assertEquals(expectedHighlights.toSet, actualHighlights.toSet)
   }
