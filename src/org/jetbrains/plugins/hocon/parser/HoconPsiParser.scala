@@ -1,15 +1,17 @@
-package org.jetbrains.plugins.hocon
-package parser
+package org.jetbrains.plugins
+package hocon.parser
 
-import java.net.{MalformedURLException, URL}
 
 import com.intellij.lang.PsiBuilder.Marker
 import com.intellij.lang.WhitespacesAndCommentsBinder.TokenTextGetter
+
+import java.net.{MalformedURLException, URI, URISyntaxException}
 import com.intellij.lang._
 import com.intellij.psi.tree.IElementType
 import org.jetbrains.plugins.hocon.lexer.HoconTokenSets._
 import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
 import org.jetbrains.plugins.hocon.parser.HoconElementType._
+import org.jetbrains.plugins.hocon.{CharSequenceOps, HoconConstants, JList, unquote}
 
 import scala.annotation.tailrec
 import scala.util.matching.Regex
@@ -210,10 +212,10 @@ class HoconPsiParser extends PsiParser {
           if (matches(QuotedString)) {
             if (qualifier == HoconConstants.UrlModifier) {
               try {
-                new URL(unquote(builder.getTokenText))
+                new URI(unquote(builder.getTokenText)).toURL
                 parseStringLiteral(IncludeTarget)
               } catch {
-                case e: MalformedURLException =>
+                case e@(_: MalformedURLException | _: URISyntaxException | _: IllegalArgumentException) =>
                   tokenError(if (e.getMessage != null) e.getMessage else "malformed URL")
               }
             } else {
@@ -312,7 +314,7 @@ class HoconPsiParser extends PsiParser {
       suppressNewLine()
       parseKeyParts(first)
 
-      marker.done(if(substitution) SubstitutionKey else FieldKey)
+      marker.done(if (substitution) SubstitutionKey else FieldKey)
 
       setEdgeTokenBinders(marker, first, matches(PathEnding.orNewLineOrEof))
     }
