@@ -5,7 +5,7 @@ import com.intellij.psi.TokenType
 
 object HoconElementSets {
 
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   final val KeyedField =
     PrefixedField | ValuedField

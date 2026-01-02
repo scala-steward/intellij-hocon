@@ -2,7 +2,7 @@ package org.jetbrains.plugins.hocon
 package highlight
 
 import navigation.HoconFindUsagesHandler
-import psi._
+import psi.*
 
 import com.intellij.codeInsight.highlighting.{HighlightUsagesHandlerBase, HighlightUsagesHandlerFactoryBase}
 import com.intellij.openapi.editor.Editor

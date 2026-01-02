@@ -3,7 +3,7 @@ package formatting
 
 import java.util
 
-import com.intellij.formatting._
+import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock

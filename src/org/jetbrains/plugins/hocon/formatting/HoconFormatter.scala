@@ -10,10 +10,10 @@ import org.jetbrains.plugins.hocon.lang.HoconLanguage
 
 class HoconFormatter(settings: CodeStyleSettings) {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenSets._
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementSets._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenSets.*
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementSets.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   val commonSettings = settings.getCommonSettings(HoconLanguage)
   val customSettings = settings.getCustomSettings(classOf[HoconCustomCodeStyleSettings])

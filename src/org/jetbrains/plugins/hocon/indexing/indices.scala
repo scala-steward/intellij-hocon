@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileBasedIndex.{InputFilter, ValueProcessor}
-import com.intellij.util.indexing._
+import com.intellij.util.indexing.*
 import com.intellij.util.io.{DataExternalizer, EnumeratorStringDescriptor, KeyDescriptor}
 import org.jetbrains.plugins.hocon.lang.HoconFileType
 import org.jetbrains.plugins.hocon.psi.{HFieldKey, HKey, HSubstitutionKey, HoconPsiFile}

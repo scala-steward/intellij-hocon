@@ -8,8 +8,8 @@ import org.jetbrains.plugins.hocon.settings.HoconProjectSettings
 
 class HStringJavaClassReferenceProvider extends JavaClassReferenceProvider {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   setSoft(true)
 

@@ -11,8 +11,8 @@ import scala.annotation.tailrec
 
 class HoconErrorHighlightingAnnotator extends Annotator {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   def annotate(element: PsiElement, holder: AnnotationHolder): Unit = {
     element.getNode.getElementType match {

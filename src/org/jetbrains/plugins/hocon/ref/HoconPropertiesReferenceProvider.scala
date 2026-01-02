@@ -3,7 +3,7 @@ package ref
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi._
+import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
 import org.jetbrains.plugins.hocon.psi.{HFieldKey, HoconPsiElementFactory, HoconPsiFile}
 import org.jetbrains.plugins.hocon.semantics.{ResOpts, ToplevelCtx}

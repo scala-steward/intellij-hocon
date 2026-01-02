@@ -5,11 +5,11 @@ import java.net.{MalformedURLException, URL}
 
 import com.intellij.lang.PsiBuilder.Marker
 import com.intellij.lang.WhitespacesAndCommentsBinder.TokenTextGetter
-import com.intellij.lang._
+import com.intellij.lang.*
 import com.intellij.psi.tree.IElementType
-import org.jetbrains.plugins.hocon.lexer.HoconTokenSets._
-import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-import org.jetbrains.plugins.hocon.parser.HoconElementType._
+import org.jetbrains.plugins.hocon.lexer.HoconTokenSets.*
+import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
 import scala.annotation.tailrec
 import scala.util.matching.Regex
@@ -100,7 +100,7 @@ class HoconPsiParser extends PsiParser {
     }
 
     def setEdgeTokenBinders(marker: Marker, nonGreedyLeft: Boolean, nonGreedyRight: Boolean): Unit = {
-      import com.intellij.lang.WhitespacesBinders._
+      import com.intellij.lang.WhitespacesBinders.*
       marker.setCustomEdgeTokenBinders(
         if (nonGreedyLeft) DEFAULT_LEFT_BINDER else GREEDY_LEFT_BINDER,
         if (nonGreedyRight) DEFAULT_RIGHT_BINDER else GREEDY_RIGHT_BINDER,

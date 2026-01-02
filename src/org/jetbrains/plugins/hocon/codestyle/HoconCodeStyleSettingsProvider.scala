@@ -18,6 +18,6 @@ class HoconCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
         new TabbedLanguageCodeStylePanel(HoconLanguage, getCurrentSettings, settings) {}
     }
 
-  override def createCustomSettings(settings: CodeStyleSettings) =
+  override def createCustomSettings(settings: CodeStyleSettings): HoconCustomCodeStyleSettings =
     new HoconCustomCodeStyleSettings(settings)
 }

@@ -17,7 +17,7 @@ class HoconSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
 
 object HoconSyntaxHighlighter extends SyntaxHighlighter {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
 
   private val tokenHighlights = Map[IElementType, Array[TextAttributesKey]](
     BadCharacter -> Array(HHC.BadCharacter),

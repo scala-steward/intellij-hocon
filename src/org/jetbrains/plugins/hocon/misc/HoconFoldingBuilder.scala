@@ -11,8 +11,8 @@ import scala.collection.mutable.ArrayBuffer
 
 class HoconFoldingBuilder extends FoldingBuilder {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   def buildFoldRegions(node: ASTNode, document: Document): Array[FoldingDescriptor] = {
     val foldableTypes = TokenSet.create(Object, Array, MultilineString)

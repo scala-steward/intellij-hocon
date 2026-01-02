@@ -3,7 +3,7 @@ package ref
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.{ElementManipulators, PsiElement, PsiReference}
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 import org.jetbrains.plugins.hocon.semantics.{ResOpts, ResolvedField, ToplevelCtx}
 
 import scala.collection.mutable

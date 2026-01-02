@@ -7,8 +7,8 @@ import com.intellij.psi.tree.IElementType
 
 class HoconBraceMatcher extends PairedBraceMatcher {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenSets._
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenSets.*
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
 
   def getPairs: Array[BracePair] = Array(
     new BracePair(LBrace, RBrace, true),

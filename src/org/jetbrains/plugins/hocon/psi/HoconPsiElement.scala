@@ -8,20 +8,20 @@ import com.intellij.lang.ASTNode
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.util.text.StringUtil
-import com.intellij.psi._
+import com.intellij.psi.*
 import com.intellij.psi.impl.source.PsiFileImpl
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.tree.IElementType
 import com.intellij.util.IncorrectOperationException
 import javax.swing.Icon
-import org.jetbrains.plugins.hocon.HoconConstants._
+import org.jetbrains.plugins.hocon.HoconConstants.*
 import org.jetbrains.plugins.hocon.lang.HoconFileType
 import org.jetbrains.plugins.hocon.lexer.{HoconLexer, HoconTokenSets, HoconTokenType}
 import org.jetbrains.plugins.hocon.parser.HoconElementType
 import org.jetbrains.plugins.hocon.parser.HoconElementType.HoconFileElementType
 import org.jetbrains.plugins.hocon.ref.{HKeyReference, IncludedFileReferenceSet, PackageDirsEnumerator}
-import org.jetbrains.plugins.hocon.semantics._
+import org.jetbrains.plugins.hocon.semantics.*
 
 import scala.annotation.tailrec
 import scala.reflect.{classTag, ClassTag}
@@ -471,7 +471,7 @@ sealed abstract class HKey(ast: ASTNode) extends HoconPsiElement(ast) {
 
   override def getIcon(flags: Int): Icon = PropertyIcon
 
-  override def getReference = new HKeyReference(this)
+  override def getReference: HKeyReference = new HKeyReference(this)
 }
 
 final class HFieldKey(ast: ASTNode) extends HKey(ast) with PsiQualifiedNamedElement {

@@ -1,10 +1,10 @@
 package org.jetbrains.plugins.hocon
 
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.roots._
+import com.intellij.openapi.roots.*
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder
-import com.intellij.testFramework.fixtures._
+import com.intellij.testFramework.fixtures.*
 import com.intellij.testFramework.fixtures.impl.{JavaModuleFixtureBuilderImpl, ModuleFixtureImpl}
 import com.intellij.testFramework.{IndexingTestUtil, UsefulTestCase}
 import org.jetbrains.jps.model.java.JavaSourceRootType
@@ -13,7 +13,7 @@ import java.io.File
 
 abstract class HoconMultiModuleTest extends UsefulTestCase with HoconTestUtils {
 
-  import HoconMultiModuleTest._
+  import HoconMultiModuleTest.*
 
   private var _fixture: CodeInsightTestFixture = _
 
@@ -36,7 +36,7 @@ abstract class HoconMultiModuleTest extends UsefulTestCase with HoconTestUtils {
       builder.addContentRoot(directory.getPath)
 
       def addLibrary(libraryName: String): Unit = {
-        import OrderRootType._
+        import OrderRootType.*
         val mapping = Map(CLASSES -> "", SOURCES -> "src").view.mapValues { suffix =>
           Array(new File(directory, libraryName + suffix).getPath)
         }.toMap
@@ -91,7 +91,7 @@ object HoconMultiModuleTest {
     def addSourceFolder(name: String, kind: JavaSourceRootType): Unit =
       contentEntry.getFile.findChild(name).opt.foreach(contentEntry.addSourceFolder(_, kind))
 
-    import JavaSourceRootType._
+    import JavaSourceRootType.*
     addSourceFolder("src", SOURCE)
     addSourceFolder("testsrc", TEST_SOURCE)
 

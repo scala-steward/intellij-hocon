@@ -2,7 +2,7 @@ package org.jetbrains.plugins.hocon
 package editor
 
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.IdeActions._
+import com.intellij.openapi.actionSystem.IdeActions.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actionSystem.EditorActionManager
 import com.intellij.psi.PsiFile
