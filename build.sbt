@@ -21,6 +21,7 @@ lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
     "-feature",
     "-unchecked",
     "-Xfatal-warnings",
+    "-Xsource:3"
   ),
   ideBasePackages := Seq("org.jetbrains.plugins.hocon"),
   intellijPlugins := Seq("com.intellij.java", "com.intellij.java-i18n", "com.intellij.modules.json").map(_.toPlugin),
