@@ -9,6 +9,7 @@ import org.jetbrains.plugins.hocon.psi.{HFieldKey, HoconPsiElementFactory, Hocon
 import org.jetbrains.plugins.hocon.semantics.{ResOpts, ToplevelCtx}
 import org.jetbrains.plugins.hocon.settings.HoconProjectSettings
 
+import java.lang
 import scala.annotation.tailrec
 import scala.collection.mutable
 
@@ -19,9 +20,16 @@ class HoconPropertiesReferenceProvider extends PsiReferenceProvider {
   def getReferencesByElement(element: PsiElement, context: ProcessingContext): Array[PsiReference] =
     if (!isEnabled(element.getProject)) PsiReference.EMPTY_ARRAY
     else {
+      val valueOrText: Option[String] =
+        element.opt.collectOnly[PsiLiteralValue].map(_.getValue).collectOnly[String].orElse {
+          element.opt.collectOnly[PsiLanguageInjectionHost].map(_.createLiteralTextEscaper()).map { lit =>
+            val out = new lang.StringBuilder()
+            lit.decode(lit.getRelevantTextRange, out)
+            out.toString
+          }
+        }
       val res = for {
-        lit <- element.opt.collectOnly[PsiLiteralValue]
-        strValue <- lit.getValue.opt.collectOnly[String]
+        strValue <- valueOrText
         hpath <- HoconPsiElementFactory.createPath(strValue, PsiManager.getInstance(element.getProject)).opt
         strPath <- hpath.fullStringPath
       } yield {
@@ -47,7 +55,7 @@ class HoconPropertiesReferenceProvider extends PsiReferenceProvider {
             val nextRef = subRefs.headOption
             val revIndex = nextRef.fold(0)(_.reverseIndex + 1)
             val keyRange = new TextRange(off, endOffset)
-            val ref = new HoconPropertyReference(strPath, revIndex, key, element, lit, keyRange)
+            val ref = new HoconPropertyReference(strPath, revIndex, key, element, keyRange)
             ref :: subRefs
         }
 
@@ -62,7 +70,6 @@ class HoconPropertyReference(
   val reverseIndex: Int,
   key: String,
   element: PsiElement,
-  lit: PsiLiteralValue,
   range: TextRange,
 ) extends PsiReference {
   def getCanonicalText: String = key
