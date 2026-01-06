@@ -5,7 +5,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.AbstractElementManipulator
 import org.jetbrains.plugins.hocon.lexer.HoconLexer
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 
 /** Manipulator for unquoted string literals. For now, it is registered for
   * [[org.jetbrains.plugins.hocon.psi.HoconPsiElement]]. It will be registered for dedicated class after proper
@@ -13,8 +13,8 @@ import org.jetbrains.plugins.hocon.psi._
   */
 class HStringManipulator extends AbstractElementManipulator[HString] {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   def handleContentChange(str: HString, range: TextRange, newContent: String): HString = {
     val strType = str.stringType

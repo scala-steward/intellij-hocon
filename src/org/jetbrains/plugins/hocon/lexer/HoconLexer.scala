@@ -27,8 +27,8 @@ object HoconLexer {
 
 class HoconLexer extends LexerBase {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconLexer._
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
+  import org.jetbrains.plugins.hocon.lexer.HoconLexer.*
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
 
   private def onContents(state: State): State = state match {
     case Initial | SubStarting => Value

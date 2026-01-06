@@ -1,13 +1,13 @@
 package org.jetbrains.plugins.hocon
 package ref
 
-import com.intellij.openapi.roots._
+import com.intellij.openapi.roots.*
 import com.intellij.openapi.util.{Condition, TextRange}
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi._
+import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.{FileReference, FileReferenceSet}
 import com.intellij.psi.search.GlobalSearchScope
-import org.jetbrains.plugins.hocon.HoconConstants._
+import org.jetbrains.plugins.hocon.HoconConstants.*
 
 import java.{util => ju}
 
@@ -121,7 +121,7 @@ class IncludedFileReferenceSet(
 }
 
 object IncludedFileReference {
-  final val ResolveResultOrdering = Ordering.by { rr: ResolveResult =>
+  val ResolveResultOrdering: Ordering[ResolveResult] = Ordering.by { rr =>
     rr.getElement match {
       case file: PsiFile =>
         val name = file.getName

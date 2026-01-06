@@ -4,7 +4,7 @@ package navigation
 import indexing.HoconPathIndex
 import lang.HoconFileType
 import lexer.{HoconLexer, HoconTokenSets, HoconTokenType}
-import psi._
+import psi.*
 
 import com.intellij.find.findUsages.{FindUsagesHandler, FindUsagesHandlerFactory, FindUsagesOptions}
 import com.intellij.lang.HelpID
@@ -14,7 +14,7 @@ import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.search._
+import com.intellij.psi.search.*
 import com.intellij.psi.tree.TokenSet
 import com.intellij.usageView.UsageInfo
 import com.intellij.util.Processor

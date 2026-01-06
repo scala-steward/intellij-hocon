@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.Key
 import com.intellij.psi.{PsiElement, PsiFile}
 import org.jetbrains.plugins.hocon.editor.HoconObjectEntryMover.{PrefixModKey, PrefixModification}
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 
 import scala.annotation.tailrec
 

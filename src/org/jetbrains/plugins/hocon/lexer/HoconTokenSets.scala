@@ -7,7 +7,7 @@ import scala.language.implicitConversions
 
 object HoconTokenSets {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
 
   final val Empty = TokenSet.EMPTY
   final val Whitespace = InlineWhitespace | LineBreakingWhitespace

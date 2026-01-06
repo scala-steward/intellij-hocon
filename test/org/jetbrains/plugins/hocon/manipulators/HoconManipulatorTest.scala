@@ -12,7 +12,7 @@ import org.junit.runners.AllTests
 abstract class HoconManipulatorTest(clazz: Class[_ <: HoconPsiElement], name: String)
   extends HoconFileSetTestCase("manipulators/" + name) {
 
-  import HoconFileSetTestCase._
+  import HoconFileSetTestCase.*
 
   override protected def transform(data: Seq[String]): String = {
     val Seq(inputCaret, newContentInBrackets) = data

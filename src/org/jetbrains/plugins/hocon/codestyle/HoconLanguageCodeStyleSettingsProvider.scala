@@ -7,7 +7,7 @@ import com.intellij.application.options.SmartIndentOptionsEditor
 import com.intellij.lang.Language
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.SpacingOption
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType
-import com.intellij.psi.codeStyle._
+import com.intellij.psi.codeStyle.*
 
 class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
   override def getLanguage: Language = HoconLanguage
@@ -24,9 +24,9 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
       consumer.showCustomOption(classOf[HoconCustomCodeStyleSettings], name, title, group, options: _*)
 
     import CodeStyleSettingsCustomizable.{WRAP_VALUES, WRAP_VALUES_FOR_SINGLETON}
-    import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType._
+    import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType.*
     val customizableOptions = CodeStyleSettingsCustomizableOptions.getInstance
-    import customizableOptions._
+    import customizableOptions.*
 
     settingsType match {
       case SPACING_SETTINGS =>
@@ -53,7 +53,7 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
         showCustomOption("SPACE_AFTER_QMARK", "After '?'", SPACES_OTHER)
 
       case WRAPPING_AND_BRACES_SETTINGS =>
-        import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.WrappingOrBraceOption._
+        import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.WrappingOrBraceOption.*
 
         consumer.showStandardOptions(KEEP_LINE_BREAKS.name)
 
@@ -122,7 +122,7 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
     commonCodeStyleSettings
   }
 
-  override def getIndentOptionsEditor = new SmartIndentOptionsEditor
+  override def getIndentOptionsEditor: SmartIndentOptionsEditor = new SmartIndentOptionsEditor
 
   def getCodeSample(settingsType: SettingsType): String = settingsType match {
     case SettingsType.INDENT_SETTINGS =>

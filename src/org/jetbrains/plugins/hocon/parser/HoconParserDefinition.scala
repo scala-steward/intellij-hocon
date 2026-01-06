@@ -9,12 +9,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.tree.{IFileElementType, TokenSet}
 import com.intellij.psi.{FileViewProvider, PsiElement, PsiFile}
 import org.jetbrains.plugins.hocon.lexer.{HoconLexer, HoconTokenSets, HoconTokenType}
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 
 class HoconParserDefinition extends ParserDefinition {
 
-  import HoconTokenSets._
-  import HoconTokenType._
+  import HoconTokenSets.*
+  import HoconTokenType.*
 
   override def spaceExistenceTypeBetweenTokens(left: ASTNode, right: ASTNode): SpaceRequirements =
     (left.getElementType, right.getElementType) match {
@@ -46,7 +46,7 @@ class HoconParserDefinition extends ParserDefinition {
 
 object HoconParserDefinition {
 
-  import HoconElementType._
+  import HoconElementType.*
 
   private def createElement(ast: ASTNode): ASTWrapperPsiElement = ast.getElementType match {
     case Object => new HObject(ast)

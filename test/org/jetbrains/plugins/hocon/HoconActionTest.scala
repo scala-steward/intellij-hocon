@@ -1,7 +1,7 @@
 package org.jetbrains.plugins.hocon
 
 import com.intellij.ide.DataManager
-import com.intellij.openapi.actionSystem._
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.{FileEditorManager, OpenFileDescriptor}
 import com.intellij.psi.PsiFile
@@ -16,8 +16,8 @@ abstract class HoconActionTest protected (protected val actionId: String, subPat
 
   // Code based on AbstractEnterActionTestBase
 
-  import HoconActionTest._
-  import HoconFileSetTestCase._
+  import HoconActionTest.*
+  import HoconFileSetTestCase.*
 
   override protected def transform(data: Seq[String]): String = {
     val (fileText, offset) = extractCaret(data.head)

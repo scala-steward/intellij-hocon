@@ -2,7 +2,7 @@ package org.jetbrains.plugins.hocon
 package settings
 
 import com.intellij.openapi.components.State.NameGetter
-import com.intellij.openapi.components._
+import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 

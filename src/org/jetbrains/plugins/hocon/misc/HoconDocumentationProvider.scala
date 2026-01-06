@@ -4,7 +4,7 @@ package misc
 import com.intellij.lang.documentation.{DocumentationMarkup, DocumentationProviderEx}
 import com.intellij.psi.{PsiElement, PsiManager}
 import org.apache.commons.text.StringEscapeUtils
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 import org.jetbrains.plugins.hocon.semantics.{ResOpts, ResolvedField}
 
 import scala.annotation.tailrec
@@ -40,7 +40,7 @@ class HoconDocumentationProvider extends DocumentationProviderEx {
   }
 
   override def generateDoc(element: PsiElement, originalElement: PsiElement): String = {
-    import DocumentationMarkup._
+    import DocumentationMarkup.*
     // `element` is already resolved here but it loses context of the `originalElement` so resolving again
     (key(originalElement) orElse key(element)).flatMap(_.resolved).nullOr { resolved =>
       val docField = findDocField(Some(resolved)).getOrElse(resolved.field)
