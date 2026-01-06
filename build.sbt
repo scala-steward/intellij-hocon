@@ -8,7 +8,7 @@ ThisBuild / autoRemoveOldCachedIntelliJSDK := true
 
 val junitInterfaceVersion = "0.13.3"
 val junitVersion = "4.13.2"
-val commonsTextVersion = "1.14.0"
+val commonsTextVersion = "1.15.0"
 val opentest4jVersion = "1.3.0"
 
 lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
