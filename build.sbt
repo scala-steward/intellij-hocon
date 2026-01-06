@@ -1,6 +1,6 @@
 import org.jetbrains.sbtidea.Keys._
 
-ThisBuild / scalaVersion := "2.13.17"
+ThisBuild / scalaVersion := "2.13.18"
 ThisBuild / intellijPluginName := "intellij-hocon"
 ThisBuild / intellijBuild := "252.26830.84"
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
