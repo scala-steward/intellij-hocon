@@ -26,7 +26,7 @@ class HoconPsiParser extends PsiParser {
   class Parser(builder: PsiBuilder) {
 
     object DocumentationCommentsBinder extends WhitespacesAndCommentsBinder {
-      override def getEdgePosition(tokens: JList[_ <: IElementType], atStreamEdge: Boolean, getter: TokenTextGetter)
+      override def getEdgePosition(tokens: JList[? <: IElementType], atStreamEdge: Boolean, getter: TokenTextGetter)
         : Int = {
 
         @tailrec
@@ -100,6 +100,7 @@ class HoconPsiParser extends PsiParser {
     }
 
     def setEdgeTokenBinders(marker: Marker, nonGreedyLeft: Boolean, nonGreedyRight: Boolean): Unit = {
+      import com.intellij.lang.WhitespacesBinders.*
       marker.setCustomEdgeTokenBinders(
         if (nonGreedyLeft) DEFAULT_LEFT_BINDER else GREEDY_LEFT_BINDER,
         if (nonGreedyRight) DEFAULT_RIGHT_BINDER else GREEDY_RIGHT_BINDER,
