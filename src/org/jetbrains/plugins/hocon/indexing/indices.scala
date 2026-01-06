@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileBasedIndex.{InputFilter, ValueProcessor}
-import com.intellij.util.indexing._
+import com.intellij.util.indexing.*
 import com.intellij.util.io.{DataExternalizer, EnumeratorStringDescriptor, KeyDescriptor}
 import org.jetbrains.plugins.hocon.lang.HoconFileType
 import org.jetbrains.plugins.hocon.psi.{HFieldKey, HKey, HSubstitutionKey, HoconPsiFile}
@@ -21,7 +21,7 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 case class HKeyOccurrences(
   inFields: ArrayBuffer[TextRange],
-  inSubstitutions: ArrayBuffer[TextRange]
+  inSubstitutions: ArrayBuffer[TextRange],
 ) {
   def all: Iterator[TextRange] = inFields.iterator ++ inSubstitutions.iterator
 }
@@ -82,8 +82,10 @@ abstract class HKeyIndexCompanion[K](name: String) {
     dataKey: K,
     project: Project,
     filter: GlobalSearchScope = GlobalSearchScope.EMPTY_SCOPE,
-    select: HKeyOccurrences => Iterator[TextRange] = occ => occ.inFields.iterator ++ occ.inSubstitutions.iterator
-  )(processor: HKey => Boolean): Boolean = {
+    select: HKeyOccurrences => Iterator[TextRange] = occ => occ.inFields.iterator ++ occ.inSubstitutions.iterator,
+  )(
+    processor: HKey => Boolean
+  ): Boolean = {
     val manager = PsiManager.getInstance(project)
     val pfi = ProjectFileIndex.getInstance(project)
     val indexProcessor: ValueProcessor[HKeyOccurrences] = (file, occurrences) => {
@@ -100,9 +102,7 @@ abstract class HKeyIndexCompanion[K](name: String) {
 }
 
 abstract class HKeyIndex[K](companion: HKeyIndexCompanion[K])
-  extends FileBasedIndexExtension[K, HKeyOccurrences]
-    with DataIndexer[K, HKeyOccurrences, FileContent]
-    with InputFilter {
+  extends FileBasedIndexExtension[K, HKeyOccurrences] with DataIndexer[K, HKeyOccurrences, FileContent] with InputFilter {
 
   def indexKey(hkey: HKey): Option[K]
 
@@ -152,8 +152,7 @@ abstract class HKeyIndex[K](companion: HKeyIndexCompanion[K])
 object HoconPathIndex extends HKeyIndexCompanion[List[String]]("hocon.paths") {
   final val Version = 0
 
-  object KeyDescriptor extends DataExternalizer[List[String]]
-    with KeyDescriptor[List[String]] {
+  object KeyDescriptor extends DataExternalizer[List[String]] with KeyDescriptor[List[String]] {
 
     def getHashCode(value: List[String]): Int = value.hashCode
     def isEqual(val1: List[String], val2: List[String]): Boolean = val1 == val2

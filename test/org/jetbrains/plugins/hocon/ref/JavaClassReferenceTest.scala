@@ -9,7 +9,7 @@ class JavaClassReferenceTest extends HoconSingleModuleTest {
 
   def testReferencesInJavaStringLiteral(): Unit = {
     val javaFile = psiManager.findFile(findVirtualFile("pkg/Main.java"))
-    val cls = javaFile.depthFirst.collectFirst({ case cls: PsiClass => cls }).get
+    val cls = javaFile.depthFirst.collectFirst { case cls: PsiClass => cls }.get
 
     val hoconFile = psiManager.findFile(findVirtualFile("application.conf"))
     val ref = hoconFile.findReferenceAt(11)

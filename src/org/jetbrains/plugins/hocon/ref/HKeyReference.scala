@@ -3,14 +3,14 @@ package ref
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.{ElementManipulators, PsiElement, PsiReference}
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 import org.jetbrains.plugins.hocon.semantics.{ResOpts, ResolvedField, ToplevelCtx}
 
 import scala.collection.mutable
 
-/**
- * @author ghik
- */
+/** @author
+  *   ghik
+  */
 class HKeyReference(key: HKey) extends PsiReference {
   def getCanonicalText: String = key.stringValue
 
@@ -38,24 +38,26 @@ class HKeyReference(key: HKey) extends PsiReference {
     val opts = ResOpts(reverse = true)
 
     val variantFields: Iterator[ResolvedField] = key.parent match {
-      case path: HPath => path.prefix match {
-        case Some(prefixPath) =>
-          prefixPath.allKeys.flatMapIt { path =>
-            val strPath = path.map(_.stringValue)
-            toplevelCtx.occurrences(strPath, opts).flatMap(_.occurrences(None, opts))
-          }
-        case None =>
-          toplevelCtx.occurrences(None, opts)
-      }
+      case path: HPath =>
+        path.prefix match {
+          case Some(prefixPath) =>
+            prefixPath.allKeys.flatMapIt { path =>
+              val strPath = path.map(_.stringValue)
+              toplevelCtx.occurrences(strPath, opts).flatMap(_.occurrences(None, opts))
+            }
+          case None =>
+            toplevelCtx.occurrences(None, opts)
+        }
       case field: HKeyedField =>
         val entries = field.outermostEntries
         field.prefixingField match {
-          case Some(prefixField) => prefixField.fullStringPath.iterator.flatMap { strPath =>
-            val prefixOccurrences =
-              if (entries.isToplevel) toplevelCtx.occurrences(strPath, opts)
-              else entries.occurrences(strPath, opts, toplevelCtx)
-            prefixOccurrences.flatMap(_.occurrences(None, opts))
-          }
+          case Some(prefixField) =>
+            prefixField.fullStringPath.iterator.flatMap { strPath =>
+              val prefixOccurrences =
+                if (entries.isToplevel) toplevelCtx.occurrences(strPath, opts)
+                else entries.occurrences(strPath, opts, toplevelCtx)
+              prefixOccurrences.flatMap(_.occurrences(None, opts))
+            }
           case None =>
             if (entries.isToplevel) toplevelCtx.occurrences(None, opts)
             else entries.occurrences(None, opts, toplevelCtx)
@@ -63,7 +65,8 @@ class HKeyReference(key: HKey) extends PsiReference {
     }
 
     val seenKeys = new mutable.HashSet[String]
-    variantFields.filter(sf => seenKeys.add(sf.key)) // dirty, stateful filter
+    variantFields
+      .filter(sf => seenKeys.add(sf.key)) // dirty, stateful filter
       .map(sf => new HoconPropertyLookupElement(sf))
       .toArray[AnyRef]
   }

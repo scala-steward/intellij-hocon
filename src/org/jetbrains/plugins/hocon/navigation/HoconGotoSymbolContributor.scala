@@ -25,7 +25,8 @@ class HoconGotoSymbolContributor extends ChooseByNameContributorEx {
   def processNames(processor: Processor[_ >: String], scope: GlobalSearchScope, filter: IdFilter): Unit =
     FileBasedIndex.getInstance.processAllKeys[String](HoconKeyIndex.Id, processor, scope, filter)
 
-  def processElementsWithName(name: String, processor: Processor[_ >: NavigationItem], parameters: FindSymbolParameters): Unit =
+  def processElementsWithName(name: String, processor: Processor[_ >: NavigationItem], parameters: FindSymbolParameters)
+    : Unit =
     if (enabled(parameters.getProject)) ReadAction.run { () =>
       val project = parameters.getProject
       val scope = parameters.getSearchScope

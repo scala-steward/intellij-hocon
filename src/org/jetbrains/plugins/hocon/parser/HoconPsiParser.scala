@@ -28,7 +28,8 @@ class HoconPsiParser extends PsiParser {
   class Parser(builder: PsiBuilder) {
 
     object DocumentationCommentsBinder extends WhitespacesAndCommentsBinder {
-      override def getEdgePosition(tokens: JList[_ <: IElementType], atStreamEdge: Boolean, getter: TokenTextGetter): Int = {
+      override def getEdgePosition(tokens: JList[_ <: IElementType], atStreamEdge: Boolean, getter: TokenTextGetter)
+        : Int = {
 
         @tailrec
         def goThrough(commentToken: IElementType, resultSoFar: Int, i: Int): Int = {
@@ -101,10 +102,10 @@ class HoconPsiParser extends PsiParser {
     }
 
     def setEdgeTokenBinders(marker: Marker, nonGreedyLeft: Boolean, nonGreedyRight: Boolean): Unit = {
-      import com.intellij.lang.WhitespacesBinders._
       marker.setCustomEdgeTokenBinders(
         if (nonGreedyLeft) DEFAULT_LEFT_BINDER else GREEDY_LEFT_BINDER,
-        if (nonGreedyRight) DEFAULT_RIGHT_BINDER else GREEDY_RIGHT_BINDER)
+        if (nonGreedyRight) DEFAULT_RIGHT_BINDER else GREEDY_RIGHT_BINDER,
+      )
     }
 
     def parseFile(): Unit = {
@@ -226,8 +227,11 @@ class HoconPsiParser extends PsiParser {
             } else errorUntil(ValueEnding.orNewLineOrEof, "expected ')'")
           } else errorUntil(ValueEnding.orNewLineOrEof, "expected quoted string")
         } else errorUntil(ValueEnding.orNewLineOrEof, s"expected '(' immediately after '$qualifier'")
-      } else errorUntil(ValueEnding.orNewLineOrEof,
-        "expected quoted string, optionally wrapped in 'url(...)', 'file(...)' or 'classpath(...)'")
+      } else
+        errorUntil(
+          ValueEnding.orNewLineOrEof,
+          "expected quoted string, optionally wrapped in 'url(...)', 'file(...)' or 'classpath(...)'",
+        )
 
       marker.done(QualifiedIncluded)
     }
@@ -260,8 +264,7 @@ class HoconPsiParser extends PsiParser {
           } else {
             errorUntil(ValueEnding.orNewLineOrEof, "expected value for object field")
           }
-        } else errorUntil(ValueEnding.orNewLineOrEof,
-          "expected ':', '=', '+=' or object")
+        } else errorUntil(ValueEnding.orNewLineOrEof, "expected ':', '=', '+=' or object")
         marker.done(ValuedField)
       }
 
@@ -304,8 +307,10 @@ class HoconPsiParser extends PsiParser {
           } else if (matches(StringLiteral)) {
             parseStringLiteral(KeyPart)
           } else {
-            tokenError("key must be a concatenation of unquoted, quoted or multiline strings " +
-              "(characters $ \" { } [ ] : = , + # ` ^ ? ! @ * & \\ are forbidden unquoted)")
+            tokenError(
+              "key must be a concatenation of unquoted, quoted or multiline strings " +
+                "(characters $ \" { } [ ] : = , + # ` ^ ? ! @ * & \\ are forbidden unquoted)"
+            )
           }
           parseKeyParts(first = false)
         }
@@ -319,7 +324,12 @@ class HoconPsiParser extends PsiParser {
       setEdgeTokenBinders(marker, first, matches(PathEnding.orNewLineOrEof))
     }
 
-    def parseUnquotedString(stringType: HoconElementType, matcher: Matcher, nonGreedyLeft: Boolean, nonGreedyRightMatcher: Matcher): Unit = {
+    def parseUnquotedString(
+      stringType: HoconElementType,
+      matcher: Matcher,
+      nonGreedyLeft: Boolean,
+      nonGreedyRightMatcher: Matcher,
+    ): Unit = {
       val stringMarker = builder.mark()
       val marker = builder.mark()
       suppressNewLine()
@@ -355,13 +365,15 @@ class HoconPsiParser extends PsiParser {
 
       def tryParseNull = tryParse(passKeyword(HoconConstants.Null) && matches(endingMatcher), Null)
 
-      def tryParseBoolean = tryParse((passKeyword(HoconConstants.True) || passKeyword(HoconConstants.False))
-        && matches(endingMatcher), Boolean)
+      def tryParseBoolean = tryParse(
+        (passKeyword(HoconConstants.True) || passKeyword(HoconConstants.False)) && matches(endingMatcher),
+        Boolean,
+      )
 
       def tryParseNumber = tryParse(passNumber() && matches(endingMatcher), Number)
 
       @tailrec
-      def parseValueParts(partCount: Int): Int = {
+      def parseValueParts(partCount: Int): Int =
         if (!matches(endingMatcher)) {
           if (matches(LBrace)) {
             parseObject()
@@ -378,7 +390,6 @@ class HoconPsiParser extends PsiParser {
           }
           parseValueParts(partCount + 1)
         } else partCount
-      }
 
       suppressNewLine()
       if (!tryParseNull && !tryParseBoolean && !tryParseNumber) {

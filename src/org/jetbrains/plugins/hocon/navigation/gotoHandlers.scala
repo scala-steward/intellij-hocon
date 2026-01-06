@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.{PsiElement, PsiFile}
 import org.jetbrains.plugins.hocon.lang.HoconLanguage
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 import org.jetbrains.plugins.hocon.semantics.ResOpts
 
 class HoconGotoDeclarationHandler extends GotoDeclarationHandler {
@@ -33,8 +33,7 @@ abstract class HoconGotoPrevNextAction(reverse: Boolean) extends BaseCodeInsight
     nextOccurrence <- resField.nextOccurrence(ResOpts(reverse)).map(_.field)
     containingFile <- nextOccurrence.getContainingFile.opt.flatMap(_.getVirtualFile.opt)
   } {
-    val desc = PsiNavigationSupport.getInstance.createNavigatable(
-      project, containingFile, nextOccurrence.getTextOffset)
+    val desc = PsiNavigationSupport.getInstance.createNavigatable(project, containingFile, nextOccurrence.getTextOffset)
     desc.navigate(true)
   }
 }

@@ -4,7 +4,7 @@ package navigation
 import indexing.HoconPathIndex
 import lang.HoconFileType
 import lexer.{HoconLexer, HoconTokenSets, HoconTokenType}
-import psi._
+import psi.*
 
 import com.intellij.find.findUsages.{FindUsagesHandler, FindUsagesHandlerFactory, FindUsagesOptions}
 import com.intellij.lang.HelpID
@@ -14,19 +14,20 @@ import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.search._
+import com.intellij.psi.search.*
 import com.intellij.psi.tree.TokenSet
 import com.intellij.usageView.UsageInfo
 import com.intellij.util.Processor
 
 import scala.annotation.nowarn
 
-class HoconWordsScanner extends DefaultWordsScanner(
-  new HoconLexer,
-  HoconTokenSets.StringLiteral | HoconTokenType.UnquotedChars,
-  HoconTokenSets.Comment,
-  TokenSet.EMPTY // strings needs to be recognized as identifiers for find usages to work
-) {
+class HoconWordsScanner
+  extends DefaultWordsScanner(
+    new HoconLexer,
+    HoconTokenSets.StringLiteral | HoconTokenType.UnquotedChars,
+    HoconTokenSets.Comment,
+    TokenSet.EMPTY, // strings needs to be recognized as identifiers for find usages to work
+  ) {
   setMayHaveFileRefsInLiterals(true)
 }
 
@@ -63,24 +64,27 @@ class HoconFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
 
 class HoconFindUsagesHandler(element: PsiElement) extends FindUsagesHandler(element) {
   override def processElementUsages(
-    element: PsiElement, processor: Processor[_ >: UsageInfo], options: FindUsagesOptions
+    element: PsiElement,
+    processor: Processor[_ >: UsageInfo],
+    options: FindUsagesOptions,
   ): Boolean = {
     val res = element match {
-      case hkey: HKey if options.isUsages => ReadAction.compute { () =>
-        hkey.fullContainingPath.forall { keyPath =>
-          val strPath = keyPath.map(_.stringValue)
+      case hkey: HKey if options.isUsages =>
+        ReadAction.compute { () =>
+          hkey.fullContainingPath.forall { keyPath =>
+            val strPath = keyPath.map(_.stringValue)
 
-          def onKeyFound(foundKey: HKey): Boolean =
-            processor.process(new UsageInfo(foundKey, 0, foundKey.getTextLength, false))
+            def onKeyFound(foundKey: HKey): Boolean =
+              processor.process(new UsageInfo(foundKey, 0, foundKey.getTextLength, false))
 
-          options.searchScope match {
-            case gss: GlobalSearchScope if !hkey.inFieldInArray =>
-              HoconPathIndex.processHKeys(strPath, hkey.getProject, gss)(onKeyFound)
-            case _ =>
-              HoconFindUsagesHandler.localUsagesOf(hkey).forall(onKeyFound)
+            options.searchScope match {
+              case gss: GlobalSearchScope if !hkey.inFieldInArray =>
+                HoconPathIndex.processHKeys(strPath, hkey.getProject, gss)(onKeyFound)
+              case _ =>
+                HoconFindUsagesHandler.localUsagesOf(hkey).forall(onKeyFound)
+            }
           }
         }
-      }
       case _ => true
     }
     res && super.processElementUsages(element, processor, options)

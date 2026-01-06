@@ -1,31 +1,31 @@
 package org.jetbrains.plugins.hocon
 
 import com.intellij.ide.DataManager
-import com.intellij.openapi.actionSystem._
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.{FileEditorManager, OpenFileDescriptor}
 import com.intellij.psi.PsiFile
 import com.intellij.testFramework.TestActionEvent
 import org.junit.Assert.assertNotNull
 
-/**
- * @author ghik
- */
-abstract class HoconActionTest protected(protected val actionId: String, subPath: String)
+/** @author
+  *   ghik
+  */
+abstract class HoconActionTest protected (protected val actionId: String, subPath: String)
   extends HoconFileSetTestCase(s"actions/$subPath") {
 
   // Code based on AbstractEnterActionTestBase
 
-  import HoconActionTest._
-  import HoconFileSetTestCase._
+  import HoconActionTest.*
+  import HoconFileSetTestCase.*
 
   override protected def transform(data: Seq[String]): String = {
     val (fileText, offset) = extractCaret(data.head)
     val psiFile = createPseudoPhysicalHoconFile(fileText)
 
     val editorManager = FileEditorManager.getInstance(myProject)
-    val editor: Editor = editorManager.openTextEditor(
-      new OpenFileDescriptor(myProject, psiFile.getVirtualFile, 0), false)
+    val editor: Editor =
+      editorManager.openTextEditor(new OpenFileDescriptor(myProject, psiFile.getVirtualFile, 0), false)
     assertNotNull(editor)
     editor.getCaretModel.moveToOffset(offset)
 
@@ -55,11 +55,14 @@ object HoconActionTest {
 
   private def mockDataContext(file: PsiFile, editor: Editor) = {
     val parentContext = DataManager.getInstance().getDataContext(editor.getComponent)
-    CustomizedDataContext.withSnapshot(parentContext, (sink: DataSink) => {
-      sink.set(CommonDataKeys.PROJECT, file.getProject)
-      sink.set(CommonDataKeys.EDITOR, editor)
-      sink.set(CommonDataKeys.PSI_FILE, file)
-    })
+    CustomizedDataContext.withSnapshot(
+      parentContext,
+      (sink: DataSink) => {
+        sink.set(CommonDataKeys.PROJECT, file.getProject)
+        sink.set(CommonDataKeys.EDITOR, editor)
+        sink.set(CommonDataKeys.PSI_FILE, file)
+      },
+    )
   }
 
 }

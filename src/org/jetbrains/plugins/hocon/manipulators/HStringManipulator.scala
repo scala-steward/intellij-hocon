@@ -5,16 +5,16 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.AbstractElementManipulator
 import org.jetbrains.plugins.hocon.lexer.HoconLexer
-import org.jetbrains.plugins.hocon.psi._
+import org.jetbrains.plugins.hocon.psi.*
 
-/**
-  * Manipulator for unquoted string literals. For now, it is registered for [[org.jetbrains.plugins.hocon.psi.HoconPsiElement]].
-  * It will be registered for dedicated class after proper hierarchy of PSI classes for HOCON is implemented.
+/** Manipulator for unquoted string literals. For now, it is registered for
+  * [[org.jetbrains.plugins.hocon.psi.HoconPsiElement]]. It will be registered for dedicated class after proper
+  * hierarchy of PSI classes for HOCON is implemented.
   */
 class HStringManipulator extends AbstractElementManipulator[HString] {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   def handleContentChange(str: HString, range: TextRange, newContent: String): HString = {
     val strType = str.stringType
@@ -26,11 +26,12 @@ class HStringManipulator extends AbstractElementManipulator[HString] {
     }
 
     val needsQuoting = strType == UnquotedString &&
-      (newContent.isEmpty || newContent.startsWith(" ") || newContent.endsWith(" ")
-        || (str.elementType == KeyPart && newContent.contains('.'))
-        || newContent.exists(HoconLexer.ForbiddenChars.contains(_)) || escapedContent != newContent)
+      (newContent.isEmpty || newContent.startsWith(" ") || newContent.endsWith(" ") ||
+        (str.elementType == KeyPart && newContent.contains('.')) ||
+        newContent.exists(HoconLexer.ForbiddenChars.contains(_)) || escapedContent != newContent)
 
-    val unquotedText = oldText.substring(0, range.getStartOffset) + escapedContent + oldText.substring(range.getEndOffset)
+    val unquotedText = oldText.substring(0, range.getStartOffset) + escapedContent +
+      oldText.substring(range.getEndOffset)
     val quotedText = if (needsQuoting) "\"" + unquotedText + "\"" else unquotedText
 
     val newString = str.elementType match {

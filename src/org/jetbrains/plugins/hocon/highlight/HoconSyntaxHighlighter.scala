@@ -17,7 +17,7 @@ class HoconSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
 
 object HoconSyntaxHighlighter extends SyntaxHighlighter {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
 
   private val tokenHighlights = Map[IElementType, Array[TextAttributesKey]](
     BadCharacter -> Array(HHC.BadCharacter),
@@ -43,7 +43,7 @@ object HoconSyntaxHighlighter extends SyntaxHighlighter {
     RParen -> Array(HHC.UnquotedString),
     StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN -> Array(HHC.ValidStringEscape),
     StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN -> Array(HHC.InvalidStringEscape),
-    StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN -> Array(HHC.InvalidStringEscape)
+    StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN -> Array(HHC.InvalidStringEscape),
   )
 
   def getTokenHighlights(tokenType: IElementType): Array[TextAttributesKey] =
