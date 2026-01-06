@@ -11,38 +11,35 @@ import org.jetbrains.plugins.hocon.psi._
 
 import scala.annotation.tailrec
 
-/**
-  * An implementation of [[com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover]] which can
-  * move entire HOCON object entries (object fields or include statements).
+/** An implementation of [[com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover]] which can move
+  * entire HOCON object entries (object fields or include statements).
   *
-  * The entry being moved is being required to be the only entry in its own lines, i.e. there may not be any other
-  * entry (or left/right object brace) in the first or last line occupied by the entry being moved. If this requirement is not
-  * met, the "move statement" action will fallback to "move line".
-  * <p/>
-  * If the entry is "movable" (as defined above), the four scenarios are possible:
-  * <p/>
-  * 1. An object field may be "taken out" of its enclosing object field and have its prefix prepended, e.g.
-  * {{{
+  * The entry being moved is being required to be the only entry in its own lines, i.e. there may not be any other entry
+  * (or left/right object brace) in the first or last line occupied by the entry being moved. If this requirement is not
+  * met, the "move statement" action will fallback to "move line". <p/> If the entry is "movable" (as defined above),
+  * the four scenarios are possible: <p/>
+  *   1. An object field may be "taken out" of its enclosing object field and have its prefix prepended, e.g.
+  *      {{{
   *   a {
   *     |b = c
   *   }
-  * }}}
-  * After "move statement up":
-  * {{{
+  *      }}}
+  *      After "move statement up":
+  *      {{{
   *   a.|b = c
   *   a {
   *   }
-  * }}}
-  * <p/>
-  * 2. An object field may be "inserted" into adjacent object field and have its prefix removed, i.e. a reverse
-  * operation to "taking out". This is only possible when path of target field is a prefix of path of source field.
-  * Also, caret must NOT be at position inside the path prefix that needs to be removed.
-  * <p/>
-  * 3. If neither "taking out" or "inserting" is possible, objeect entry may be simply swapped with its adjacent entry.
-  * <p/>
-  * 4. If there is no adjacent entry for swapping, object entry is simply swapped with adjacent line.
+  *      }}}
+  *      <p/>
+  *   2. An object field may be "inserted" into adjacent object field and have its prefix removed, i.e. a reverse
+  *      operation to "taking out". This is only possible when path of target field is a prefix of path of source field.
+  *      Also, caret must NOT be at position inside the path prefix that needs to be removed. <p/>
+  *   3. If neither "taking out" or "inserting" is possible, objeect entry may be simply swapped with its adjacent
+  *      entry. <p/>
+  *   4. If there is no adjacent entry for swapping, object entry is simply swapped with adjacent line.
   *
-  * @author ghik
+  * @author
+  *   ghik
   */
 class HoconObjectEntryMover extends LineMover {
   override def checkAvailable(editor: Editor, file: PsiFile, info: MoveInfo, down: Boolean): Boolean =
@@ -75,13 +72,13 @@ class HoconObjectEntryMover extends LineMover {
     def canInsertBefore(entry: HObjectEntry) = {
       val lineStart = document.getLineStartOffset(startLine(entry))
       entry.parent.getTextRange.getStartOffset <= lineStart &&
-        entry.prevEntry.forall(_.getTextRange.getEndOffset < lineStart)
+      entry.prevEntry.forall(_.getTextRange.getEndOffset < lineStart)
     }
 
     def canInsertAfter(entry: HObjectEntry) = {
       val lineEnd = document.getLineEndOffset(endLine(entry))
       entry.parent.getTextRange.getEndOffset >= lineEnd &&
-        entry.nextEntry.forall(_.getTextRange.getStartOffset > lineEnd)
+      entry.nextEntry.forall(_.getTextRange.getStartOffset > lineEnd)
     }
 
     // Checks if lines occupied by this entry do not overlap with any adjacent entry or
@@ -127,7 +124,8 @@ class HoconObjectEntryMover extends LineMover {
         def canInsert(field: HObjectField) =
           if (down) canInsertAfter(field) else canInsertBefore(field)
 
-        field.parent.prefixingField.map(_.enclosingObjectField)
+        field.parent.prefixingField
+          .map(_.enclosingObjectField)
           .filter(of => edgeLine(of) == edgeLine(field.parent) && canInsert(of))
           .map(of => (of, of.keyedField.fieldsInPathForward.map(keyString).toList))
       } else None
@@ -146,13 +144,16 @@ class HoconObjectEntryMover extends LineMover {
 
     def fieldToDescendInto(field: HObjectField): Option[(HObjectField, List[String])] =
       for {
-        adjacentField <- adjacentEntry(field).collect({ case f: HObjectField => f }).filter(canInsertInto)
+        adjacentField <- adjacentEntry(field).collect { case f: HObjectField => f }.filter(canInsertInto)
         prefixToRemove <- {
           val prefix = adjacentField.keyedField.fieldsInPathForward.map(keyString).toList
-          val removablePrefix = field.keyedField.fieldsInPathForward.takeWhile {
-            case prefixed: HPrefixedField => prefixed.subField.getTextRange.contains(offset)
-            case _ => false
-          }.map(keyString).toList
+          val removablePrefix = field.keyedField.fieldsInPathForward
+            .takeWhile {
+              case prefixed: HPrefixedField => prefixed.subField.getTextRange.contains(offset)
+              case _ => false
+            }
+            .map(keyString)
+            .toList
           Some(prefix).filter(removablePrefix.startsWith(_))
         }
       } yield (adjacentField, prefixToRemove)
@@ -210,15 +211,14 @@ class HoconObjectEntryMover extends LineMover {
   }
 
   override def beforeMove(editor: Editor, info: MoveInfo, down: Boolean): Unit =
-    info.getUserData(PrefixModKey).foreach {
-      case PrefixModification(offset, length, replacement) =>
-        // we need to move caret manually when adding prefix exactly at caret position
-        val caretModel = editor.getCaretModel
-        val shouldMoveCaret = length == 0 && caretModel.getOffset == offset
-        editor.getDocument.replaceString(offset, offset + length, replacement)
-        if (shouldMoveCaret) {
-          caretModel.moveToOffset(caretModel.getOffset + replacement.length)
-        }
+    info.getUserData(PrefixModKey).foreach { case PrefixModification(offset, length, replacement) =>
+      // we need to move caret manually when adding prefix exactly at caret position
+      val caretModel = editor.getCaretModel
+      val shouldMoveCaret = length == 0 && caretModel.getOffset == offset
+      editor.getDocument.replaceString(offset, offset + length, replacement)
+      if (shouldMoveCaret) {
+        caretModel.moveToOffset(caretModel.getOffset + replacement.length)
+      }
     }
 }
 

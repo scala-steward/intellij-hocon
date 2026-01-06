@@ -51,8 +51,7 @@ class HoconFormatter(settings: CodeStyleSettings) {
 
     def dependentLFSpacing(shouldBeSpace: Boolean) = {
       val spaces = if (shouldBeSpace) 1 else 0
-      Spacing.createDependentLFSpacing(spaces, spaces, parent.getTextRange,
-        keepLineBreaks, maxBlankLines)
+      Spacing.createDependentLFSpacing(spaces, spaces, parent.getTextRange, keepLineBreaks, maxBlankLines)
     }
 
     def normalSpacing(shouldBeSpace: Boolean) = {
@@ -63,10 +62,13 @@ class HoconFormatter(settings: CodeStyleSettings) {
     val lineBreakEnsuringSpacing =
       Spacing.createSpacing(0, 0, 1, keepLineBreaks, maxBlankLines)
 
-    val isLineBreakBetween = parent.getText.subSeqView(
-      leftChild.getTextRange.getEndOffset - parent.getTextRange.getStartOffset,
-      rightChild.getTextRange.getStartOffset - parent.getTextRange.getStartOffset)
-      .charIterator.contains('\n')
+    val isLineBreakBetween = parent.getText
+      .subSeqView(
+        leftChild.getTextRange.getEndOffset - parent.getTextRange.getStartOffset,
+        rightChild.getTextRange.getStartOffset - parent.getTextRange.getStartOffset,
+      )
+      .charIterator
+      .contains('\n')
 
     def standardSpacing = (leftChild.getElementType, rightChild.getElementType) match {
       case (LBrace, RBrace) =>
@@ -210,7 +212,6 @@ class HoconFormatter(settings: CodeStyleSettings) {
       if (customSettings.LISTS_ALIGN_WHEN_MULTILINE) Alignment.createAlignment else null
   }
 
-
   def getWrap(wrapCache: WrapCache, parent: ASTNode, child: ASTNode): Wrap =
     (parent.getElementType, child.getElementType) match {
       case (Object, Include | KeyedField.extractor()) =>
@@ -245,10 +246,9 @@ class HoconFormatter(settings: CodeStyleSettings) {
   def getIndent(parent: ASTNode, child: ASTNode): Indent =
     (parent.getElementType, child.getElementType) match {
       case (Object, Include | KeyedField.extractor() | Comma | Comment.extractor()) |
-           (Array, Value.extractor() | Comma | Comment.extractor()) =>
+          (Array, Value.extractor() | Comma | Comment.extractor()) =>
         Indent.getNormalIndent
-      case (Include, Included) |
-           (ValuedField, KeyValueSeparator.extractor() | Value.extractor()) =>
+      case (Include, Included) | (ValuedField, KeyValueSeparator.extractor() | Value.extractor()) =>
         Indent.getContinuationIndent
       case _ =>
         Indent.getNoneIndent
@@ -272,16 +272,20 @@ class HoconFormatter(settings: CodeStyleSettings) {
       Iterator.empty
     case HoconFileElementType | Object =>
       // immediately expand ObjectEntries element
-      node.childrenIterator.flatMap(child => child.getElementType match {
-        case ObjectEntries => getChildren(child)
-        case _ => Iterator(child)
-      })
+      node.childrenIterator.flatMap(child =>
+        child.getElementType match {
+          case ObjectEntries => getChildren(child)
+          case _ => Iterator(child)
+        }
+      )
     case ObjectEntries =>
       // immediately expand ObjectField into its doc comments and keyed field
-      node.childrenIterator.flatMap(child => child.getElementType match {
-        case ObjectField => getChildren(child)
-        case _ => Iterator(child)
-      })
+      node.childrenIterator.flatMap(child =>
+        child.getElementType match {
+          case ObjectField => getChildren(child)
+          case _ => Iterator(child)
+        }
+      )
     case _ => node.childrenIterator
   }
 }

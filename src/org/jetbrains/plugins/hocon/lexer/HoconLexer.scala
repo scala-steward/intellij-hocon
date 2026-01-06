@@ -76,8 +76,8 @@ class HoconLexer extends LexerBase {
 
     def continuesUnquotedChars(seq: CharSequence, index: Int): Boolean = index < endOffset && {
       val char = seq.charAt(index)
-      !UnquotedSpecialChars.contains(char) && !ForbiddenChars.contains(char) &&
-        !isHoconWhitespace(char) && (char != '/' || index + 1 >= endOffset || seq.charAt(index + 1) != '/')
+      !UnquotedSpecialChars.contains(char) && !ForbiddenChars.contains(char) && !isHoconWhitespace(char) &&
+      (char != '/' || index + 1 >= endOffset || seq.charAt(index + 1) != '/')
     }
 
     tokenStart = tokenEnd
@@ -85,14 +85,16 @@ class HoconLexer extends LexerBase {
       (input.charAt(tokenStart): @switch) match {
         case '$' => setNewToken(Dollar, 1, onDollar(stateAfter))
         case '?' if stateAfter == SubStarted => setNewToken(QMark, 1, Substitution)
-        case '{' => stateAfter match {
-          case SubStarting => setNewToken(SubLBrace, 1, SubStarted)
-          case _ => setNewToken(LBrace, 1, Initial)
-        }
-        case '}' => stateAfter match {
-          case SubStarted | Substitution => setNewToken(SubRBrace, 1, Value)
-          case _ => setNewToken(RBrace, 1, Value)
-        }
+        case '{' =>
+          stateAfter match {
+            case SubStarting => setNewToken(SubLBrace, 1, SubStarted)
+            case _ => setNewToken(LBrace, 1, Initial)
+          }
+        case '}' =>
+          stateAfter match {
+            case SubStarted | Substitution => setNewToken(SubRBrace, 1, Value)
+            case _ => setNewToken(RBrace, 1, Value)
+          }
         case '[' => setNewToken(LBracket, 1, Initial)
         case ']' => setNewToken(RBracket, 1, Value)
         case '(' => setNewToken(LParen, 1, Initial)
@@ -109,14 +111,17 @@ class HoconLexer extends LexerBase {
 
         case '\"' if input.containsAt(tokenStart, "\"\"\"") =>
           val strWithoutOpening = input.subSeqView(tokenStart + 3)
-          val length = HoconConstants.MultilineStringEnd.findFirstMatchIn(strWithoutOpening)
-            .map(m => m.end + 3).getOrElse(endOffset - tokenStart)
+          val length = HoconConstants.MultilineStringEnd
+            .findFirstMatchIn(strWithoutOpening)
+            .map(m => m.end + 3)
+            .getOrElse(endOffset - tokenStart)
           setNewToken(MultilineString, length, onContents(stateAfter))
 
         case '\"' =>
           @tailrec
           def drainQuoted(offset: Int, escaping: Boolean): Int =
-            if (offset >= endOffset) offset else {
+            if (offset >= endOffset) offset
+            else {
               input.charAt(offset) match {
                 case '\n' => offset
                 case '\"' if !escaping => offset + 1

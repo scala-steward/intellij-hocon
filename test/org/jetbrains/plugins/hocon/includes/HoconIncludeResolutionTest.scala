@@ -8,9 +8,9 @@ import org.jetbrains.plugins.hocon.psi.HIncludeTarget
 import org.jetbrains.plugins.hocon.ref.IncludedFileReference
 import org.junit.Assert.{assertEquals, assertTrue}
 
-/**
- * @author ghik
- */
+/** @author
+  *   ghik
+  */
 trait HoconIncludeResolutionTest extends HoconTestUtils {
   protected def checkFile(path: String, project: Project): Unit = {
     val psiFile = findHoconFile(path, project)
@@ -32,16 +32,15 @@ trait HoconIncludeResolutionTest extends HoconTestUtils {
           case _ =>
         }
 
-        val expectedFiles = prevComments.flatMap(_.getText.stripPrefix("#").split(','))
+        val expectedFiles = prevComments
+          .flatMap(_.getText.stripPrefix("#").split(','))
           .map(_.trim)
           .filter(_.nonEmpty)
           .flatMap(path => findVirtualFile(path).opt)
 
-        val actualFiles = resolveResults
-          .map(_.getElement)
-          .collect {
-            case file: PsiFile => file.getVirtualFile
-          }
+        val actualFiles = resolveResults.map(_.getElement).collect { case file: PsiFile =>
+          file.getVirtualFile
+        }
 
         assertEquals(hincluded.getText, expectedFiles.toSet, actualFiles.toSet)
       } else {

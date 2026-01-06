@@ -12,7 +12,7 @@ import scala.beans.BeanProperty
   name = "HoconProjectSettings",
   storages = Array(
     new Storage(StoragePathMacros.WORKSPACE_FILE),
-    new Storage("hocon_settings.xml")
+    new Storage("hocon_settings.xml"),
   ),
   presentableName = classOf[HoconSettingsNameGetter],
   additionalExportDirectory = "hocon_project_settings.xml",

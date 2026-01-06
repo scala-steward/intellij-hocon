@@ -58,7 +58,7 @@ class HoconColorSettingsPage extends ColorSettingsPage {
     "unquotedstring" -> HHC.UnquotedString,
     "dot" -> HHC.PathSeparator,
     "key" -> HHC.EntryKey,
-    "substkey" -> HHC.SubstitutionKey
+    "substkey" -> HHC.SubstitutionKey,
   ).asJava
 
   def getHighlighter: SyntaxHighlighter =
@@ -99,8 +99,8 @@ object HoconColorSettingsPage {
     "Unquoted string" -> HHC.UnquotedString,
     "Path separator" -> HHC.PathSeparator,
     "Key" -> HHC.EntryKey,
-    "Key in substitution" -> HHC.SubstitutionKey
-  ).map({
-    case (displayName, key) => new AttributesDescriptor(displayName, key)
-  })
+    "Key in substitution" -> HHC.SubstitutionKey,
+  ).map { case (displayName, key) =>
+    new AttributesDescriptor(displayName, key)
+  }
 }

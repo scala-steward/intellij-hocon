@@ -13,8 +13,6 @@ import org.junit.runners.AllTests
 @RunWith(classOf[AllTests])
 class HoconCopyReferenceTest extends HoconActionTest(ACTION_COPY_REFERENCE, "copyReference") {
   protected def extractResult(file: PsiFile, editor: Editor): String =
-    CopyPasteManager.getInstance.getContents
-      .getTransferData(stringFlavor)
-      .asInstanceOf[String]
+    CopyPasteManager.getInstance.getContents.getTransferData(stringFlavor).asInstanceOf[String]
 }
 object HoconCopyReferenceTest extends TestSuiteCompanion[HoconCopyReferenceTest]

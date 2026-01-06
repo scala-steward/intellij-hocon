@@ -16,7 +16,7 @@ import scala.annotation.tailrec
 import scala.collection.AbstractIterator
 import scala.collection.convert.{AsJavaExtensions, AsScalaExtensions}
 import scala.language.implicitConversions
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{classTag, ClassTag}
 
 package object hocon extends AsJavaExtensions with AsScalaExtensions {
   type JList[T] = java.util.List[T]
@@ -26,8 +26,7 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
   final val HoconIcon = AllIcons.FileTypes.Config
   final val PropertyIcon = IconManager.getInstance.getIcon("/icons/property.svg", getClass.getClassLoader)
 
-  def notWhiteSpaceSibling(element: PsiElement)
-    (sibling: PsiElement => PsiElement): PsiElement = {
+  def notWhiteSpaceSibling(element: PsiElement)(sibling: PsiElement => PsiElement): PsiElement = {
     var result = sibling(element)
     while (isWhiteSpace(result)) {
       result = sibling(result)
@@ -38,10 +37,11 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
   private[this] def isWhiteSpace(element: PsiElement): Boolean = element match {
     case null => false
     case _: PsiWhiteSpace => true
-    case _ => element.getNode.getElementType match {
-      case HoconTokenType.InlineWhitespace => true
-      case _ => false
-    }
+    case _ =>
+      element.getNode.getElementType match {
+        case HoconTokenType.InlineWhitespace => true
+        case _ => false
+      }
   }
 
   implicit def liftSingleToken(token: IElementType): TokenSet = TokenSet.create(token)
@@ -65,6 +65,7 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
   implicit def token2TokenSetOps(token: IElementType): TokenSetOps = new TokenSetOps(token)
 
   implicit class CharSequenceOps(private val cs: CharSequence) extends AnyVal {
+
     /** Like `subSequence` but makes sure a wrapper is created instead of making a copy */
     def subSeqView(start: Int, end: Int = cs.length): CharSequence =
       new CharSequenceSubSequence(cs, start, end)
@@ -100,7 +101,7 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
     def elementType: IElementType =
       elem.getNode.getElementType
 
-    def parentOfType[T <: PsiElement : ClassTag]: Option[T] =
+    def parentOfType[T <: PsiElement: ClassTag]: Option[T] =
       Option(PsiTreeUtil.getParentOfType(elem, classTag[T].runtimeClass.asInstanceOf[Class[T]]))
 
     def getNextSibling(reverse: Boolean): PsiElement =
@@ -135,10 +136,11 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
 
     @tailrec private def findNextSibling(cur: PsiElement): PsiElement =
       if (cur eq root) null
-      else cur.getNextSibling match {
-        case null => findNextSibling(cur.getParent)
-        case sibling => sibling
-      }
+      else
+        cur.getNextSibling match {
+          case null => findNextSibling(cur.getParent)
+          case sibling => sibling
+        }
   }
 
   implicit class StringOps(private val str: String) extends AnyVal {
@@ -216,16 +218,20 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
 
   def unquote(str: String): String = {
     var result = str.stripPrefix("\"").stripSuffix("\"")
-    result = quotedCharPattern.replaceAllIn(result, m => m.group(0).charAt(1) match {
-      case '\\' => "\\"
-      case '/' => "/"
-      case '"' => "\""
-      case 'b' => "\b"
-      case 'f' => "\f"
-      case 'n' => "\n"
-      case 'r' => "\r"
-      case 't' => "\t"
-    })
+    result = quotedCharPattern.replaceAllIn(
+      result,
+      m =>
+        m.group(0).charAt(1) match {
+          case '\\' => "\\"
+          case '/' => "/"
+          case '"' => "\""
+          case 'b' => "\b"
+          case 'f' => "\f"
+          case 'n' => "\n"
+          case 'r' => "\r"
+          case 't' => "\t"
+        },
+    )
     quotedUnicodePattern.replaceAllIn(result, m => jl.Short.parseShort(m.group(1), 16).toChar.toString)
   }
 

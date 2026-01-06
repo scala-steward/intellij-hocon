@@ -8,10 +8,10 @@ import com.intellij.psi.PsiFile
 import com.intellij.testFramework.TestActionEvent
 import org.junit.Assert.assertNotNull
 
-/**
- * @author ghik
- */
-abstract class HoconActionTest protected(protected val actionId: String, subPath: String)
+/** @author
+  *   ghik
+  */
+abstract class HoconActionTest protected (protected val actionId: String, subPath: String)
   extends HoconFileSetTestCase(s"actions/$subPath") {
 
   // Code based on AbstractEnterActionTestBase
@@ -24,8 +24,8 @@ abstract class HoconActionTest protected(protected val actionId: String, subPath
     val psiFile = createPseudoPhysicalHoconFile(fileText)
 
     val editorManager = FileEditorManager.getInstance(myProject)
-    val editor: Editor = editorManager.openTextEditor(
-      new OpenFileDescriptor(myProject, psiFile.getVirtualFile, 0), false)
+    val editor: Editor =
+      editorManager.openTextEditor(new OpenFileDescriptor(myProject, psiFile.getVirtualFile, 0), false)
     assertNotNull(editor)
     editor.getCaretModel.moveToOffset(offset)
 
@@ -55,11 +55,14 @@ object HoconActionTest {
 
   private def mockDataContext(file: PsiFile, editor: Editor) = {
     val parentContext = DataManager.getInstance().getDataContext(editor.getComponent)
-    CustomizedDataContext.withSnapshot(parentContext, (sink: DataSink) => {
-      sink.set(CommonDataKeys.PROJECT, file.getProject)
-      sink.set(CommonDataKeys.EDITOR, editor)
-      sink.set(CommonDataKeys.PSI_FILE, file)
-    })
+    CustomizedDataContext.withSnapshot(
+      parentContext,
+      (sink: DataSink) => {
+        sink.set(CommonDataKeys.PROJECT, file.getProject)
+        sink.set(CommonDataKeys.EDITOR, editor)
+        sink.set(CommonDataKeys.PSI_FILE, file)
+      },
+    )
   }
 
 }

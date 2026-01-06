@@ -17,10 +17,11 @@ class HoconDocumentationProvider extends DocumentationProviderEx {
   }
 
   @tailrec private def findDocField(rfOpt: Option[ResolvedField]): Option[HValuedField] = rfOpt match {
-    case Some(rf) => rf.field match {
-      case vf: HValuedField if vf.enclosingObjectField.docComments.nonEmpty => Some(vf)
-      case _ => findDocField(rf.nextOccurrence(ResOpts(reverse = true)))
-    }
+    case Some(rf) =>
+      rf.field match {
+        case vf: HValuedField if vf.enclosingObjectField.docComments.nonEmpty => Some(vf)
+        case _ => findDocField(rf.nextOccurrence(ResOpts(reverse = true)))
+      }
     case None => None
   }
 
@@ -50,9 +51,10 @@ class HoconDocumentationProvider extends DocumentationProviderEx {
       val docComments = docField.enclosingObjectField.docComments
       val content =
         if (docComments.isEmpty) ""
-        else docComments
-          .map(c => StringEscapeUtils.escapeHtml4(c.getText.stripPrefix("#")))
-          .mkString(CONTENT_START, "<br/>", CONTENT_END)
+        else
+          docComments
+            .map(c => StringEscapeUtils.escapeHtml4(c.getText.stripPrefix("#")))
+            .mkString(CONTENT_START, "<br/>", CONTENT_END)
       definition + content
     }
   }

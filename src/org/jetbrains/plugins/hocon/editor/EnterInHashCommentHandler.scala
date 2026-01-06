@@ -13,13 +13,18 @@ import com.intellij.util.text.CharArrayUtil
 import org.jetbrains.plugins.hocon.lexer.HoconTokenType
 import org.jetbrains.plugins.hocon.psi.HoconPsiFile
 
-/**
-  * HOCON line comments can start with either '//' or '#'. Unfortunately, only one of them can be declared in
+/** HOCON line comments can start with either '//' or '#'. Unfortunately, only one of them can be declared in
   * [[HoconCommenter]] and so I need this custom enter handler for the other one.
   */
 class EnterInHashCommentHandler extends EnterHandlerDelegateAdapter {
-  override def preprocessEnter(file: PsiFile, editor: Editor, caretOffsetRef: Ref[Integer], caretAdvance: Ref[Integer],
-                               dataContext: DataContext, originalHandler: EditorActionHandler): Result =
+  override def preprocessEnter(
+    file: PsiFile,
+    editor: Editor,
+    caretOffsetRef: Ref[Integer],
+    caretAdvance: Ref[Integer],
+    dataContext: DataContext,
+    originalHandler: EditorActionHandler,
+  ): Result =
     file match {
       case _: HoconPsiFile =>
         // This code is copied from com.intellij.codeInsight.editorActions.enter.EnterInLineCommentHandler
@@ -73,9 +78,10 @@ class EnterInHashCommentHandler extends EnterHandlerDelegateAdapter {
         def isHashComment(psi: PsiElement) =
           psi != null && psi.getNode.getElementType == HoconTokenType.HashComment
 
-        if (isHashComment(psiAtOffset) && isHashComment(prevPsi) &&
-          lineNumber(psiAtOffset) == lineNumber(prevPsi) + 1 &&
-          caretOffset == psiAtOffset.getTextRange.getStartOffset) {
+        if (
+          isHashComment(psiAtOffset) && isHashComment(prevPsi) && lineNumber(psiAtOffset) == lineNumber(prevPsi) + 1 &&
+          caretOffset == psiAtOffset.getTextRange.getStartOffset
+        ) {
 
           caretModel.moveToOffset(caretOffset + 2)
           Result.Default

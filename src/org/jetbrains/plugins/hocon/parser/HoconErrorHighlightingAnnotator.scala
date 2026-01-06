@@ -20,21 +20,23 @@ class HoconErrorHighlightingAnnotator extends Annotator {
         val lexer = new StringLiteralLexer('"', QuotedString)
         lexer.start(element.getText)
 
-        Iterator.continually {
-          val range = TextRange(lexer.getTokenStart, lexer.getTokenEnd)
-            .shiftRight(element.getTextRange.getStartOffset)
-          val result = (lexer.getTokenType, range)
-          lexer.advance()
-          result
-        }.takeWhile {
-          case (tokenType, _) => tokenType != null
-        } foreach {
-          case (StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, range) =>
-            holder.newAnnotation(HighlightSeverity.ERROR, "invalid escape character").range(range).create()
-          case (StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN, range) =>
-            holder.newAnnotation(HighlightSeverity.ERROR, "invalid unicode escape").range(range).create()
-          case _ =>
-        }
+        Iterator
+          .continually {
+            val range = TextRange(lexer.getTokenStart, lexer.getTokenEnd).shiftRight(element.getTextRange.getStartOffset)
+            val result = (lexer.getTokenType, range)
+            lexer.advance()
+            result
+          }
+          .takeWhile { case (tokenType, _) =>
+            tokenType != null
+          }
+          .foreach {
+            case (StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, range) =>
+              holder.newAnnotation(HighlightSeverity.ERROR, "invalid escape character").range(range).create()
+            case (StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN, range) =>
+              holder.newAnnotation(HighlightSeverity.ERROR, "invalid unicode escape").range(range).create()
+            case _ =>
+          }
 
       case Concatenation =>
         @tailrec
@@ -44,10 +46,7 @@ class HoconErrorHighlightingAnnotator extends Annotator {
 
               validateConcatenation(constrainingToken, child.getTreeNext)
 
-            case (StringValue, StringValue) |
-                 (Object, Object) |
-                 (Array, Array) |
-                 (null, _) =>
+            case (StringValue, StringValue) | (Object, Object) | (Array, Array) | (null, _) =>
 
               validateConcatenation(child.getElementType, child.getTreeNext)
 

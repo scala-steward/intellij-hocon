@@ -11,34 +11,27 @@ import org.jetbrains.plugins.hocon.HoconConstants._
 
 import java.{util => ju}
 
-/**
- * FileReferenceSet subclass that tries to simulate how Typesafe Config handles includes with its
- * default includer implementation, <tt>com.typesafe.config.impl.SimpleIncluder</tt> -
- * as much as this is possible without access to actual runtime.
- * <p/>
- * This implementation will only try to resolve includes with <tt>classpath(...)</tt>, <tt>file(...)</tt>
- * or no qualifier - that is, <tt>url(...)</tt> is not supported since it can only be understood at runtime.
- * Also, for heuristic includes (no qualifier) in source, resource or library files, it is assumed that including file
- * was loaded from classpath resource and thus, included path will be interpreted as classpath resource relative to
- * current file. If including file is neither in sources or library, heuristic include will only be resolved as
- * if the including file was loaded with <tt>file(..)</tt> qualifier. Module content root is assumed as the working
- * directory for resolving absolute file includes.
- * <p/>
- * Files to include will be searched for in classpath of including file's containing module or - when including file
- * is in a library - joined classpath of all modules that directly depend on that library. Test sources and dependencies
- * are searched only when including file is also a test source or lies in a test dependency.
- * <p/>
- * Just like Typesafe Config, this implementation will try to guess extension of included resource to be either
- * <tt>.conf</tt>, <tt>.json</tt> or <tt>.properties</tt>. It is impossible to include a file with any other extension.
- * This constraint is also reflected by appropriate completion filter.
- * <p/>
- * If a reference resolves to multiple files, they will be sorted so that .conf files come first, .json files after
- * them and .properties files at the end. This reflects the order in which Typesafe Config merges those files.
- */
+/** FileReferenceSet subclass that tries to simulate how Typesafe Config handles includes with its default includer
+  * implementation, <tt>com.typesafe.config.impl.SimpleIncluder</tt> - as much as this is possible without access to
+  * actual runtime. <p/> This implementation will only try to resolve includes with <tt>classpath(...)</tt>,
+  * <tt>file(...)</tt> or no qualifier - that is, <tt>url(...)</tt> is not supported since it can only be understood at
+  * runtime. Also, for heuristic includes (no qualifier) in source, resource or library files, it is assumed that
+  * including file was loaded from classpath resource and thus, included path will be interpreted as classpath resource
+  * relative to current file. If including file is neither in sources or library, heuristic include will only be
+  * resolved as if the including file was loaded with <tt>file(..)</tt> qualifier. Module content root is assumed as the
+  * working directory for resolving absolute file includes. <p/> Files to include will be searched for in classpath of
+  * including file's containing module or - when including file is in a library - joined classpath of all modules that
+  * directly depend on that library. Test sources and dependencies are searched only when including file is also a test
+  * source or lies in a test dependency. <p/> Just like Typesafe Config, this implementation will try to guess extension
+  * of included resource to be either <tt>.conf</tt>, <tt>.json</tt> or <tt>.properties</tt>. It is impossible to
+  * include a file with any other extension. This constraint is also reflected by appropriate completion filter. <p/> If
+  * a reference resolves to multiple files, they will be sorted so that .conf files come first, .json files after them
+  * and .properties files at the end. This reflects the order in which Typesafe Config merges those files.
+  */
 object IncludedFileReferenceSet {
   case class DefaultContexts(
     scope: GlobalSearchScope,
-    contexts: ju.Collection[PsiFileSystemItem]
+    contexts: ju.Collection[PsiFileSystemItem],
   )
 
   def classpathScope(context: PsiFile): GlobalSearchScope = {
@@ -73,7 +66,7 @@ class IncludedFileReferenceSet(
   element: PsiElement,
   forcedAbsolute: Boolean,
   fromClasspath: Boolean,
-  scope: GlobalSearchScope
+  scope: GlobalSearchScope,
 ) extends FileReferenceSet(text, element, 1, null, true) {
 
   setEmptyPathAllowed(false)
@@ -89,8 +82,9 @@ class IncludedFileReferenceSet(
     new IncludedFileReference(this, range, index, text)
 
   override def getReferenceCompletionFilter: Condition[PsiFileSystemItem] =
-    (item: PsiFileSystemItem) => item.isDirectory ||
-      item.getName.endsWith(ConfExt) || item.getName.endsWith(JsonExt) || item.getName.endsWith(PropsExt)
+    (item: PsiFileSystemItem) =>
+      item.isDirectory || item.getName.endsWith(ConfExt) || item.getName.endsWith(JsonExt) ||
+        item.getName.endsWith(PropsExt)
 
   // code mostly based on similar bits in `FileReferenceSet` and `PsiFileReferenceHelper`
   override def computeDefaultContexts: JCollection[PsiFileSystemItem] = {
@@ -145,8 +139,8 @@ class IncludedFileReference(refSet: FileReferenceSet, range: TextRange, index: I
   extends FileReference(refSet, range, index, text) {
 
   private def lacksExtension(text: String) =
-    isLast && text.nonEmpty && text != "." && text != ".." && text != "/" &&
-      !text.endsWith(ConfExt) && !text.endsWith(JsonExt) && !text.endsWith(PropsExt)
+    isLast && text.nonEmpty && text != "." && text != ".." && text != "/" && !text.endsWith(ConfExt) &&
+      !text.endsWith(JsonExt) && !text.endsWith(PropsExt)
 
   override def innerResolve(caseSensitive: Boolean, containingFile: PsiFile): Array[ResolveResult] = {
     val result = super.innerResolve(caseSensitive, containingFile)
@@ -161,7 +155,7 @@ class IncludedFileReference(refSet: FileReferenceSet, range: TextRange, index: I
     text: String,
     context: PsiFileSystemItem,
     result: JCollection[_ >: ResolveResult],
-    caseSensitive: Boolean
+    caseSensitive: Boolean,
   ): Unit =
     if (lacksExtension(text)) {
       def resolveWithExt(ext: String): Unit =

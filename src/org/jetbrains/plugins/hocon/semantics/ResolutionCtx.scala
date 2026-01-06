@@ -15,7 +15,7 @@ import scala.annotation.tailrec
 case class ResOpts(
   reverse: Boolean,
   resolveIncludes: Boolean = true,
-  resolveSubstitutions: Boolean = true
+  resolveSubstitutions: Boolean = true,
 )
 
 sealed abstract class SubstitutionKind
@@ -29,7 +29,7 @@ object SubstitutionKind {
 case class SubstitutionCtx(
   ctx: ResolutionCtx,
   subst: HSubstitution,
-  subsKind: SubstitutionKind
+  subsKind: SubstitutionKind,
 )
 
 sealed abstract class ResolutionCtx {
@@ -79,13 +79,13 @@ sealed abstract class ResolutionCtx {
   def localEndOffset: Int = localTextRange._3
 
   // ignores substitutions!
-  final def sameAs(other: ResolutionCtx): Boolean =
-    (this eq other) ||
-      depth == other.depth && localTextRange == other.localTextRange && ((lastInclude, other.lastInclude) match {
-        case (Some(inc1), Some(inc2)) => inc1.parentCtx.sameAs(inc2.parentCtx)
-        case (None, None) => true
-        case _ => false
-      })
+  final def sameAs(other: ResolutionCtx): Boolean = (this eq other) ||
+    depth == other.depth && localTextRange == other.localTextRange &&
+    ((lastInclude, other.lastInclude) match {
+      case (Some(inc1), Some(inc2)) => inc1.parentCtx.sameAs(inc2.parentCtx)
+      case (None, None) => true
+      case _ => false
+    })
 
   // https://github.com/lightbend/config/blob/master/HOCON.md#include-semantics-substitution
   def substitutionFixupPrefix: List[String] = {
@@ -104,7 +104,8 @@ sealed abstract class ResolutionCtx {
   }
 
   private def pathsInResolution(
-    suffix: List[ResolvedField], suffixStack: List[List[ResolvedField]]
+    suffix: List[ResolvedField],
+    suffixStack: List[List[ResolvedField]],
   ): List[List[ResolvedField]] = this match {
     case tc: ToplevelCtx =>
       val fromOpenSubstitutions = tc.subsCtx.fold(Nil: List[List[ResolvedField]]) { sc =>
@@ -132,9 +133,8 @@ sealed abstract class ResolutionCtx {
       ac.parentCtx.pathsInResolution
   }
 
-  /**
-   * All currently "open" paths - used for detecting self-referential and circular substitutions.
-   */
+  /** All currently "open" paths - used for detecting self-referential and circular substitutions.
+    */
   lazy val pathsInResolution: List[List[ResolvedField]] =
     pathsInResolution(Nil, Nil)
 
@@ -144,37 +144,36 @@ sealed abstract class ResolutionCtx {
     case Nil => Iterator(this).collectOnly[ResolvedField]
     case head :: tail =>
       val occurrencesOfFirst = occurrences(Some(head), opts)
-      tail.foldLeft(occurrencesOfFirst) {
-        case (occ, key) => occ.flatMap(_.occurrences(Some(key), opts))
+      tail.foldLeft(occurrencesOfFirst) { case (occ, key) =>
+        occ.flatMap(_.occurrences(Some(key), opts))
       }
   }
 
-  /**
-   * Occurrences of given key (or all) adjacent to this resolution context (outside of it, before or after).
-   * Example: sibling fields of an `include`.
-   */
+  /** Occurrences of given key (or all) adjacent to this resolution context (outside of it, before or after). Example:
+    * sibling fields of an `include`.
+    */
   def adjacentOccurrences(key: Option[String], opts: ResOpts): Iterator[ResolvedField] = this match {
     case _: ToplevelCtx =>
       Iterator.empty
 
-    case rf: ResolvedField => rf.subsCtx match {
-      case Some(sc) =>
-        rf.moreOccurrences(opts, withBacktraced = false).flatMap(_.occurrences(key, opts)) ++
-          sc.subst.adjacentConcatOccurrences(key, opts, sc.ctx) ++
-          sc.ctx.adjacentOccurrences(key, opts)
+    case rf: ResolvedField =>
+      rf.subsCtx match {
+        case Some(sc) =>
+          rf.moreOccurrences(opts, withBacktraced = false).flatMap(_.occurrences(key, opts)) ++
+            sc.subst.adjacentConcatOccurrences(key, opts, sc.ctx) ++ sc.ctx.adjacentOccurrences(key, opts)
 
-      case None =>
-        rf.moreOccurrences(opts).flatMap(_.occurrences(key, opts))
-    }
+        case None =>
+          rf.moreOccurrences(opts).flatMap(_.occurrences(key, opts))
+      }
 
     case ic: IncludeCtx =>
-      ic.moreFileContexts(opts.reverse).flatMap(_.occurrences(key, opts)) ++ (ic.source match {
-        case IncludeSource.Element(inc) =>
-          inc.adjacentEntriesOccurrences(key, opts, ic.parentCtx) ++
-            ic.parentCtx.adjacentOccurrences(key, opts)
-        case _ =>
-          Iterator.empty
-      })
+      ic.moreFileContexts(opts.reverse).flatMap(_.occurrences(key, opts)) ++
+        (ic.source match {
+          case IncludeSource.Element(inc) =>
+            inc.adjacentEntriesOccurrences(key, opts, ic.parentCtx) ++ ic.parentCtx.adjacentOccurrences(key, opts)
+          case _ =>
+            Iterator.empty
+        })
 
     case _: ArrayCtx =>
       Iterator.empty
@@ -189,12 +188,15 @@ sealed abstract class ResolutionCtx {
           case _ => suffix
         }
       }
-    loop(lastInclude, this match {
-      case tc: ToplevelCtx => s"<toplevel:${tc.context.pos}>"
-      case ic: IncludeCtx => ic.file.getName
-      case rf: ResolvedField => rf.field.pos
-      case ac: ArrayCtx => ac.value.pos
-    })
+    loop(
+      lastInclude,
+      this match {
+        case tc: ToplevelCtx => s"<toplevel:${tc.context.pos}>"
+        case ic: IncludeCtx => ic.file.getName
+        case rf: ResolvedField => rf.field.pos
+        case ac: ArrayCtx => ac.value.pos
+      },
+    )
   }
 }
 
@@ -203,7 +205,7 @@ case class ToplevelCtx(
   scope: GlobalSearchScope,
   files: Vector[HoconPsiFile],
   // indicates that we are resolving a substitution and points to it
-  subsCtx: Option[SubstitutionCtx] = None
+  subsCtx: Option[SubstitutionCtx] = None,
 ) extends ResolutionCtx {
 
   def toplevelIncludes(reverse: Boolean): Iterator[IncludeCtx] =
@@ -217,17 +219,22 @@ case class ToplevelCtx(
 }
 
 object ToplevelCtx {
-  //TODO: configurable in project settings
+  // TODO: configurable in project settings
   final val ReferenceResource = "reference.conf"
   final val ApplicationResource = "application.conf"
 
   private def resolveResource(project: Project, scope: GlobalSearchScope, resource: String): Vector[HoconPsiFile] = {
     val psiManager = PsiManager.getInstance(project)
     val rootDirs = PackageDirsEnumerator.classpathPackageDirs(project, scope, "")
-    FilenameIndex.getVirtualFilesByName(resource, scope)
-      .iterator.asScala.map(psiManager.findFile)
-      .collectOnly[HoconPsiFile].filter(f => rootDirs.contains(f.getParent))
-      .toVector.sortBy(_.getVirtualFile.getPath)
+    FilenameIndex
+      .getVirtualFilesByName(resource, scope)
+      .iterator
+      .asScala
+      .map(psiManager.findFile)
+      .collectOnly[HoconPsiFile]
+      .filter(f => rootDirs.contains(f.getParent))
+      .toVector
+      .sortBy(_.getVirtualFile.getPath)
   }
 
   def apply(file: HoconPsiFile): ToplevelCtx = {
@@ -251,7 +258,7 @@ case class ResolvedField(
   key: String,
   field: HKeyedField,
   parentCtx: ResolutionCtx,
-  subsCtx: Option[SubstitutionCtx] = None // indicates that this field is a result of substitution resolution
+  subsCtx: Option[SubstitutionCtx] = None, // indicates that this field is a result of substitution resolution
 ) extends ResolutionCtx {
 
   def hkey: HFieldKey =
@@ -318,17 +325,16 @@ case class ResolvedField(
 
   @tailrec final def samePathAs(other: ResolvedField): Boolean =
     sameAs(other) ||
-      depth == other.depth && key == other.key && ((prefixField, other.prefixField) match {
+      depth == other.depth && key == other.key &&
+      ((prefixField, other.prefixField) match {
         case (Some(pf), Some(opf)) => pf.samePathAs(opf)
         case (None, None) => true
         case _ => false
       })
 
-  /**
-   * Checks whether a [[ResolvedField]] occurs before another [[ResolvedField]].
-   * Includes are taken into account, i.e. you can imagine comparing positions in a document with all the included
-   * files inlined.
-   */
+  /** Checks whether a [[ResolvedField]] occurs before another [[ResolvedField]]. Includes are taken into account, i.e.
+    * you can imagine comparing positions in a document with all the included files inlined.
+    */
   def isBefore(other: ResolvedField): Boolean = {
     def comparePos(lhs: ResolutionCtx, rhs: ResolutionCtx): Int =
       if (lhs.localStartOffset < rhs.localStartOffset && lhs.localEndOffset <= rhs.localStartOffset) -1
@@ -341,10 +347,11 @@ case class ResolvedField(
       case (Nil, rhead :: _) => comparePos(this, rhead)
       case (lhead :: ltail, rhead :: rtail) =>
         comparePos(lhead, rhead) match {
-          case 0 => Integer.compare(lhead.fileIdx, rhead.fileIdx) match {
-            case 0 => compare(ltail, rtail)
-            case res => res
-          }
+          case 0 =>
+            Integer.compare(lhead.fileIdx, rhead.fileIdx) match {
+              case 0 => compare(ltail, rtail)
+              case res => res
+            }
           case res => res
         }
     }
@@ -363,7 +370,8 @@ case class ResolvedField(
         if (rf.depth > selfReferenced.depth) rf.prefixField match {
           case Some(pf) => loop(pf)
           case None => false
-        } else if (rf.depth == selfReferenced.depth) {
+        }
+        else if (rf.depth == selfReferenced.depth) {
           rf.samePathAs(selfReferenced) && !rf.isBefore(selfReferenced)
         } else false
       loop(this)
@@ -371,8 +379,7 @@ case class ResolvedField(
 
   def moreOccurrences(opts: ResOpts, withBacktraced: Boolean = true): Iterator[ResolvedField] = {
     val unbacktraced =
-      field.adjacentEntriesOccurrences(key.opt, opts, parentCtx) ++
-        parentCtx.adjacentOccurrences(key.opt, opts)
+      field.adjacentEntriesOccurrences(key.opt, opts, parentCtx) ++ parentCtx.adjacentOccurrences(key.opt, opts)
 
     val backtraced =
       if (withBacktraced) backtracedField.flatMapIt(_.moreOccurrences(opts))
@@ -389,7 +396,7 @@ case class ResolvedField(
     case _: HPrefixedField =>
       ObjectValue
     case vf: HValuedField if vf.isArrayAppend =>
-      ArrayValue //TODO: perform concatenation with previous occurrence, at least for validation
+      ArrayValue // TODO: perform concatenation with previous occurrence, at least for validation
     case vf: HValuedField =>
       vf.value.map(_.resolveValue(this)).getOrElse(InvalidValue)
   }
@@ -405,7 +412,7 @@ case class IncludeCtx(
   source: IncludeSource,
   allFiles: Vector[HoconPsiFile],
   fileIdx: Int,
-  parentCtx: ResolutionCtx
+  parentCtx: ResolutionCtx,
 ) extends ResolutionCtx {
   def file: HoconPsiFile = allFiles(fileIdx)
 
@@ -426,9 +433,10 @@ object IncludeCtx {
     source: IncludeSource,
     files: Vector[HoconPsiFile],
     reverse: Boolean,
-    parentCtx: ResolutionCtx
+    parentCtx: ResolutionCtx,
   ): Iterator[IncludeCtx] =
-    if (files.isEmpty) Iterator.empty else {
+    if (files.isEmpty) Iterator.empty
+    else {
       val idxIt = if (reverse) files.indices.reverseIterator else files.indices.iterator
       idxIt.map(idx => IncludeCtx(source, files, idx, parentCtx))
     }
