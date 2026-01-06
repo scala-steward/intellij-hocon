@@ -5,7 +5,7 @@ import lexer.HoconTokenSets.*
 import lexer.HoconTokenType.*
 import parser.HoconElementType.*
 
-import java.net.{MalformedURLException, URI, URISyntaxException}
+import java.net.{MalformedURLException, URI}
 import com.intellij.lang.*
 import com.intellij.lang.PsiBuilder.Marker
 import com.intellij.lang.WhitespacesAndCommentsBinder.TokenTextGetter
@@ -212,10 +212,10 @@ class HoconPsiParser extends PsiParser {
           if (matches(QuotedString)) {
             if (qualifier == HoconConstants.UrlModifier) {
               try {
-                new URI(unquote(builder.getTokenText)).toURL
+                URI.create(unquote(builder.getTokenText)).toURL
                 parseStringLiteral(IncludeTarget)
               } catch {
-                case e @ (_: MalformedURLException | _: URISyntaxException | _: IllegalArgumentException) =>
+                case e @ (_: MalformedURLException | _: IllegalArgumentException) =>
                   tokenError(if (e.getMessage != null) e.getMessage else "malformed URL")
               }
             } else {
