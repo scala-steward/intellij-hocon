@@ -16,7 +16,7 @@ lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
   Compile / scalaSource := baseDirectory.value / "src",
   Test / scalaSource := baseDirectory.value / "test",
   Compile / resourceDirectory := baseDirectory.value / "resources",
-  Global / javacOptions ++= Seq("-source", "21", "-target", "21"),
+  Global / javacOptions ++= Seq("--release", "21"),
   Global / scalacOptions ++= Seq(
     "-deprecation",
     "-feature",
