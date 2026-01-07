@@ -3,7 +3,7 @@ package formatting
 
 import java.util
 
-import com.intellij.formatting._
+import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
@@ -41,15 +41,20 @@ class HoconBlock(formatter: HoconFormatter, node: ASTNode, indent: Indent, wrap:
       formatter.getSpacing(node, child1.asInstanceOf[HoconBlock].getNode, child2.asInstanceOf[HoconBlock].getNode)
 
   lazy val children: Seq[Block] =
-    formatter.getChildren(node)
+    formatter
+      .getChildren(node)
       .filterNot(n => n.getTextLength == 0 || n.getElementType == TokenType.WHITE_SPACE)
-      .map(createChildBlock).toVector
+      .map(createChildBlock)
+      .toVector
 
   private def createChildBlock(child: ASTNode) =
-    new HoconBlock(formatter, child,
+    new HoconBlock(
+      formatter,
+      child,
       formatter.getIndent(node, child),
       formatter.getWrap(wrapCache, node, child),
-      formatter.getAlignment(alignmentCache, node, child))
+      formatter.getAlignment(alignmentCache, node, child),
+    )
 
   override def toString: String =
     s"${node.getElementType}[${node.getText.replace("\n", "\\n")}]${node.getTextRange}" + {

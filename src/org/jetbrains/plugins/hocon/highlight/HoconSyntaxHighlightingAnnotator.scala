@@ -7,9 +7,9 @@ import com.intellij.psi.PsiElement
 
 class HoconSyntaxHighlightingAnnotator extends Annotator {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementSets._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementSets.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   def annotate(element: PsiElement, holder: AnnotationHolder): Unit = {
     lazy val parentType = element.getParent.getNode.getElementType

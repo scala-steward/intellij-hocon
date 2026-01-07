@@ -37,10 +37,15 @@ sealed abstract class ConfigValue {
 sealed abstract class SimpleValue(val text: String) extends ConfigValue
 object SimpleValue {
   def unapply(sv: SimpleValue): Some[(String, Boolean)] =
-    Some((sv.text, sv match {
-      case StringValue(_, concatWhitespace) => concatWhitespace
-      case _ => false
-    }))
+    Some(
+      (
+        sv.text,
+        sv match {
+          case StringValue(_, concatWhitespace) => concatWhitespace
+          case _ => false
+        },
+      )
+    )
 }
 final case class StringValue(value: String, concatWhitespace: Boolean = false) extends SimpleValue(value) {
   def quotedIfNecessary: String = HStringValue.quoteIfNecessary(value)

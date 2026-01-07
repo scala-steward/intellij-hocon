@@ -2,7 +2,7 @@ package org.jetbrains.plugins.hocon
 package editor
 
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.IdeActions._
+import com.intellij.openapi.actionSystem.IdeActions.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actionSystem.EditorActionManager
 import com.intellij.psi.PsiFile
@@ -11,8 +11,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.runner.RunWith
 import org.junit.runners.AllTests
 
-abstract class HoconEditorActionTest(actionId: String, subPath: String)
-  extends HoconActionTest(actionId, subPath) {
+abstract class HoconEditorActionTest(actionId: String, subPath: String) extends HoconActionTest(actionId, subPath) {
 
   override protected def executeAction(dataContext: DataContext, editor: Editor): Unit = {
     val actionHandler = EditorActionManager.getInstance.getActionHandler(actionId)
@@ -47,8 +46,7 @@ class HoconMoveStatementDownOnlyActionTest
 object HoconMoveStatementDownOnlyActionTest extends TestSuiteCompanion[HoconMoveStatementDownOnlyActionTest]
 
 @RunWith(classOf[AllTests])
-class HoconMoveStatementUpActionTest
-  extends HoconEditorActionTest(ACTION_MOVE_STATEMENT_UP_ACTION, "moveStatement/up")
+class HoconMoveStatementUpActionTest extends HoconEditorActionTest(ACTION_MOVE_STATEMENT_UP_ACTION, "moveStatement/up")
 object HoconMoveStatementUpActionTest extends TestSuiteCompanion[HoconMoveStatementUpActionTest]
 
 @RunWith(classOf[AllTests])

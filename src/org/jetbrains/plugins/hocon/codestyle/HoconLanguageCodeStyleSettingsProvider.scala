@@ -7,7 +7,7 @@ import com.intellij.application.options.SmartIndentOptionsEditor
 import com.intellij.lang.Language
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.SpacingOption
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType
-import com.intellij.psi.codeStyle._
+import com.intellij.psi.codeStyle.*
 
 class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
   override def getLanguage: Language = HoconLanguage
@@ -24,22 +24,25 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
       consumer.showCustomOption(classOf[HoconCustomCodeStyleSettings], name, title, group, options: _*)
 
     import CodeStyleSettingsCustomizable.{WRAP_VALUES, WRAP_VALUES_FOR_SINGLETON}
-    import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType._
+    import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType.*
     val customizableOptions = CodeStyleSettingsCustomizableOptions.getInstance
-    import customizableOptions._
+    import customizableOptions.*
 
     settingsType match {
       case SPACING_SETTINGS =>
-        consumer.showStandardOptions(List(
-          SpacingOption.SPACE_WITHIN_BRACES,
-          SpacingOption.SPACE_WITHIN_BRACKETS,
-          SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES,
-          SpacingOption.SPACE_BEFORE_COMMA,
-          SpacingOption.SPACE_AFTER_COMMA
-        ).map(_.name): _*)
+        consumer.showStandardOptions(
+          List(
+            SpacingOption.SPACE_WITHIN_BRACES,
+            SpacingOption.SPACE_WITHIN_BRACKETS,
+            SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES,
+            SpacingOption.SPACE_BEFORE_COMMA,
+            SpacingOption.SPACE_AFTER_COMMA,
+          ).map(_.name): _*
+        )
 
         consumer.renameStandardOption(SpacingOption.SPACE_WITHIN_BRACES.name, "Object braces")
-        consumer.renameStandardOption(SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES.name, "Include qualifier parentheses")
+        consumer
+          .renameStandardOption(SpacingOption.SPACE_WITHIN_METHOD_CALL_PARENTHESES.name, "Include qualifier parentheses")
 
         showCustomOption("SPACE_BEFORE_COLON", "Before colon", SPACES_AROUND_OPERATORS)
         showCustomOption("SPACE_AFTER_COLON", "After colon", SPACES_AROUND_OPERATORS)
@@ -50,7 +53,7 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
         showCustomOption("SPACE_AFTER_QMARK", "After '?'", SPACES_OTHER)
 
       case WRAPPING_AND_BRACES_SETTINGS =>
-        import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.WrappingOrBraceOption._
+        import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.WrappingOrBraceOption.*
 
         consumer.showStandardOptions(KEEP_LINE_BREAKS.name)
 
@@ -67,16 +70,35 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
         showCustomOption("LISTS_NEW_LINE_AFTER_LBRACKET", "New line after '['", ListsWrap)
         showCustomOption("LISTS_RBRACKET_ON_NEXT_LINE", "Place ']' on new line", ListsWrap)
 
-        showCustomOption("OBJECT_FIELDS_WITH_COLON_WRAP", ObjectFieldsWithColonWrap, null,
-          WRAP_OPTIONS_FOR_SINGLETON, WRAP_VALUES_FOR_SINGLETON)
+        showCustomOption(
+          "OBJECT_FIELDS_WITH_COLON_WRAP",
+          ObjectFieldsWithColonWrap,
+          null,
+          WRAP_OPTIONS_FOR_SINGLETON,
+          WRAP_VALUES_FOR_SINGLETON,
+        )
         showCustomOption("OBJECT_FIELDS_COLON_ON_NEXT_LINE", "Colon on next line", ObjectFieldsWithColonWrap)
 
-        showCustomOption("OBJECT_FIELDS_WITH_ASSIGNMENT_WRAP", ObjectFieldsWithAssignmentWrap, null,
-          WRAP_OPTIONS_FOR_SINGLETON, WRAP_VALUES_FOR_SINGLETON)
-        showCustomOption("OBJECT_FIELDS_ASSIGNMENT_ON_NEXT_LINE", "Assignment operator on next line", ObjectFieldsWithAssignmentWrap)
+        showCustomOption(
+          "OBJECT_FIELDS_WITH_ASSIGNMENT_WRAP",
+          ObjectFieldsWithAssignmentWrap,
+          null,
+          WRAP_OPTIONS_FOR_SINGLETON,
+          WRAP_VALUES_FOR_SINGLETON,
+        )
+        showCustomOption(
+          "OBJECT_FIELDS_ASSIGNMENT_ON_NEXT_LINE",
+          "Assignment operator on next line",
+          ObjectFieldsWithAssignmentWrap,
+        )
 
-        showCustomOption("INCLUDED_RESOURCE_WRAP", "Included resource", null,
-          WRAP_OPTIONS_FOR_SINGLETON, WRAP_VALUES_FOR_SINGLETON)
+        showCustomOption(
+          "INCLUDED_RESOURCE_WRAP",
+          "Included resource",
+          null,
+          WRAP_OPTIONS_FOR_SINGLETON,
+          WRAP_VALUES_FOR_SINGLETON,
+        )
 
       case BLANK_LINES_SETTINGS =>
 
@@ -100,7 +122,7 @@ class HoconLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsPr
     commonCodeStyleSettings
   }
 
-  override def getIndentOptionsEditor = new SmartIndentOptionsEditor
+  override def getIndentOptionsEditor: SmartIndentOptionsEditor = new SmartIndentOptionsEditor
 
   def getCodeSample(settingsType: SettingsType): String = settingsType match {
     case SettingsType.INDENT_SETTINGS =>

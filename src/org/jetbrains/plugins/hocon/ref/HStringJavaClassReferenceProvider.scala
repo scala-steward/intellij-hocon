@@ -8,8 +8,8 @@ import org.jetbrains.plugins.hocon.settings.HoconProjectSettings
 
 class HStringJavaClassReferenceProvider extends JavaClassReferenceProvider {
 
-  import org.jetbrains.plugins.hocon.lexer.HoconTokenType._
-  import org.jetbrains.plugins.hocon.parser.HoconElementType._
+  import org.jetbrains.plugins.hocon.lexer.HoconTokenType.*
+  import org.jetbrains.plugins.hocon.parser.HoconElementType.*
 
   setSoft(true)
 
@@ -22,10 +22,11 @@ class HStringJavaClassReferenceProvider extends JavaClassReferenceProvider {
     }
   }
 
-  override def getReferencesByString(str: String, position: PsiElement, offsetInPosition: Int): Array[PsiReference] = position match {
-    case hstr: HString if isEligible(hstr) =>
-      super.getReferencesByString(str, position, offsetInPosition)
-    case _ =>
-      PsiReference.EMPTY_ARRAY
-  }
+  override def getReferencesByString(str: String, position: PsiElement, offsetInPosition: Int): Array[PsiReference] =
+    position match {
+      case hstr: HString if isEligible(hstr) =>
+        super.getReferencesByString(str, position, offsetInPosition)
+      case _ =>
+        PsiReference.EMPTY_ARRAY
+    }
 }

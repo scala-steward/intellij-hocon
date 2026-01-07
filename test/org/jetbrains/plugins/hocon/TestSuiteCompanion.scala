@@ -1,6 +1,6 @@
 package org.jetbrains.plugins.hocon
 
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{classTag, ClassTag}
 
 abstract class TestSuiteCompanion[T: ClassTag] {
   def suite: T =

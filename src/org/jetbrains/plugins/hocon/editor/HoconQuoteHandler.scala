@@ -9,12 +9,12 @@ import org.jetbrains.plugins.hocon.lexer.HoconTokenType
 
 class HoconQuoteHandler extends SimpleTokenSetQuoteHandler(HoconTokenType.QuotedString) with JavaLikeQuoteHandler {
 
-  override protected def isNonClosedLiteral(iterator: HighlighterIterator, chars: CharSequence) =
+  override protected def isNonClosedLiteral(iterator: HighlighterIterator, chars: CharSequence): Boolean =
     iterator.getStart >= iterator.getEnd - 1 || chars.charAt(iterator.getEnd - 1) != '\"'
 
-  def getConcatenatableStringTokenTypes = TokenSet.EMPTY
+  def getConcatenatableStringTokenTypes: TokenSet = TokenSet.EMPTY
 
-  def getStringConcatenationOperatorRepresentation = null
+  def getStringConcatenationOperatorRepresentation: String = null
 
   def getStringTokenTypes: TokenSet = myLiteralTokenSet
 
