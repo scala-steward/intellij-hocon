@@ -110,8 +110,8 @@ object HoconElementType {
   val Concatenation = new HoconElementType("CONCATENATION")
 
   /** Unquoted string - a concatenation of whitespace, unquoted chars, parens and periods. This element type exists
-    * primarily so that [[String]] element always has exactly one child (unquoted, quoted or multiline string). Unquoted
-    * string occurs as a child of [[String]] or [[Key]].
+    * primarily so that String element always has exactly one child (unquoted, quoted or multiline string). Unquoted
+    * string occurs as a child of String or Key.
     */
   val UnquotedString = new HoconElementType("UNQUOTED_STRING")
 
