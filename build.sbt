@@ -2,8 +2,8 @@ import org.jetbrains.sbtidea.Keys._
 
 ThisBuild / scalaVersion := "2.13.18"
 ThisBuild / intellijPluginName := "intellij-hocon"
-ThisBuild / intellijBuild := "252.26830.84"
-ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
+ThisBuild / intellijBuild := "253.29346.138"
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 ThisBuild / autoRemoveOldCachedIntelliJSDK := true
 
 val junitInterfaceVersion = "0.13.3"
@@ -12,11 +12,11 @@ val commonsTextVersion = "1.15.0"
 val opentest4jVersion = "1.3.0"
 
 lazy val hocon = project.in(file(".")).enablePlugins(SbtIdeaPlugin).settings(
-  version := "2025.1.99-SNAPSHOT",
+  version := "2025.3.99-SNAPSHOT",
   Compile / scalaSource := baseDirectory.value / "src",
   Test / scalaSource := baseDirectory.value / "test",
   Compile / resourceDirectory := baseDirectory.value / "resources",
-  Global / javacOptions ++= Seq("-source", "17", "-target", "17"),
+  Global / javacOptions ++= Seq("--release", "21"),
   Global / scalacOptions ++= Seq(
     "-deprecation",
     "-feature",
