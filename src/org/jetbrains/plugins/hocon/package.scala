@@ -10,13 +10,13 @@ import com.intellij.ui.IconManager
 import com.intellij.util.text.CharSequenceSubSequence
 import org.jetbrains.plugins.hocon.lexer.HoconTokenType
 
-import java.net.{MalformedURLException, URL}
-import java.{lang => jl, util => ju}
+import java.net.{MalformedURLException, URI}
+import java.{lang as jl, util as ju}
 import scala.annotation.tailrec
 import scala.collection.AbstractIterator
 import scala.collection.convert.{AsJavaExtensions, AsScalaExtensions}
 import scala.language.implicitConversions
-import scala.reflect.{classTag, ClassTag}
+import scala.reflect.{ClassTag, classTag}
 
 package object hocon extends AsJavaExtensions with AsScalaExtensions {
   type JList[T] = java.util.List[T]
@@ -78,6 +78,7 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
       cs.length >= strEndIdx && {
         @tailrec def loop(i: Int): Boolean =
           i >= strEndIdx || (str.charAt(i - index) == cs.charAt(i) && loop(i + 1))
+
         loop(index)
       }
     }
@@ -248,9 +249,9 @@ package object hocon extends AsJavaExtensions with AsScalaExtensions {
 
   def isValidUrl(str: String): Boolean =
     try {
-      new URL(str)
+      URI.create(str).toURL
       true
     } catch {
-      case _: MalformedURLException => false
+      case _: MalformedURLException | _: IllegalArgumentException => false
     }
 }
