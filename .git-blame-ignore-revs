@@ -3,3 +3,6 @@
 
 # Reformat with -Xsource:3
 408b75336e95324ada240998b91ecc16c5fece9a
+
+# Scala Steward: Reformat with scalafmt 3.10.4
+309956dcedc3ffc47ad850acd21d1e3f21b1f188
