@@ -16,7 +16,7 @@ import scala.annotation.tailrec
 import scala.collection.AbstractIterator
 import scala.collection.convert.{AsJavaExtensions, AsScalaExtensions}
 import scala.language.implicitConversions
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{classTag, ClassTag}
 
 package object hocon extends AsJavaExtensions with AsScalaExtensions {
   type JList[T] = java.util.List[T]
