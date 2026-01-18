@@ -11,8 +11,8 @@ import org.jetbrains.plugins.hocon.psi.*
 
 import scala.annotation.tailrec
 
-/** An implementation of com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover which can move
-  * entire HOCON object entries (object fields or include statements).
+/** An implementation of com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover which can move entire
+  * HOCON object entries (object fields or include statements).
   *
   * The entry being moved is being required to be the only entry in its own lines, i.e. there may not be any other entry
   * (or left/right object brace) in the first or last line occupied by the entry being moved. If this requirement is not
