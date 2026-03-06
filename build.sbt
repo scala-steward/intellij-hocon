@@ -5,6 +5,7 @@ ThisBuild / intellijPluginName := "intellij-hocon"
 ThisBuild / intellijBuild := "261.20869.38"
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 ThisBuild / autoRemoveOldCachedIntelliJSDK := true
+ThisBuild / autoRemoveOldCachedDownloads := true
 
 val junitInterfaceVersion = "0.13.3"
 val junitVersion = "4.13.2"
