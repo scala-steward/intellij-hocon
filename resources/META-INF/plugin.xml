@@ -2,9 +2,9 @@
     <id>org.jetbrains.plugins.hocon</id>
     <name>HOCON</name>
     <description>Standalone HOCON plugin for IntelliJ IDEA</description>
-    <version>2025.1.99-SNAPSHOT</version>
+    <version>2026.1.99-SNAPSHOT</version>
     <vendor>Roman Janusz, AVSystem, JetBrains</vendor>
-    <idea-version since-build="253.0" until-build="260.0"/>
+    <idea-version since-build="253.0" until-build="270.0"/>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.json</depends>
@@ -87,7 +87,8 @@
         <breadcrumbsInfoProvider implementation="org.jetbrains.plugins.hocon.misc.HoconBreadcrumbsInfoProvider"/>
 
         <enterHandlerDelegate implementation="org.jetbrains.plugins.hocon.editor.EnterInHashCommentHandler"/>
-        <enterHandlerDelegate implementation="org.jetbrains.plugins.hocon.editor.HoconEnterBetweenBracesHandler"/>
+        <enterBetweenBracesDelegate language="HOCON"
+                                     implementationClass="org.jetbrains.plugins.hocon.editor.HoconEnterBetweenBracesHandler"/>
         <joinLinesHandler implementation="org.jetbrains.plugins.hocon.editor.HoconCommentJoinLinesHandler"/>
         <statementUpDownMover implementation="org.jetbrains.plugins.hocon.editor.HoconObjectEntryMover"/>
         <gotoDeclarationHandler implementation="org.jetbrains.plugins.hocon.navigation.HoconGotoDeclarationHandler"/>
