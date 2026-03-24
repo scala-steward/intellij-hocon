@@ -2,7 +2,7 @@ import org.jetbrains.sbtidea.Keys._
 
 ThisBuild / scalaVersion := "2.13.18"
 ThisBuild / intellijPluginName := "intellij-hocon"
-ThisBuild / intellijBuild := "261.20869.57"
+ThisBuild / intellijBuild := "261.22158.260"
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 ThisBuild / autoRemoveOldCachedIntelliJSDK := true
 ThisBuild / autoRemoveOldCachedDownloads := true
